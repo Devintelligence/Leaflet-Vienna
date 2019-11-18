@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+
+  rentalbikescript:
+    image: rentalbike
+    environment:
+      - PYTHONUNBUFFERED=1
+  
