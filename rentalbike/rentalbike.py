@@ -14,7 +14,7 @@ except AttributeError:
  
 while True:
 	try:
-		start_time = datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
+		start_time = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 		print("Program starts running at ", start_time)
 		orionUri = os.getenv('orionUri', 'http://0.0.0.0:1026/') + 'v2/entities'
 		print('Orion Uri: ', orionUri)
@@ -22,12 +22,12 @@ while True:
 		station_data = response.json()['stationlist']
 		station_list = []
 		data_type = 'RentalBikeStation'
-		headers = {"Content-Type": "application/json", 'Accept': 'application/json'}
+		headers = {"fiware-service": "rentalbike", "Content-Type": "application/json", 'Accept': 'application/json', }
 		for station in station_data:
 			data = {'id': str(data_type) + ':' + str(station['id']), 'type': data_type}
 			data['name'] = {'type': 'Text', 'value': station['name']}
 			data['temperature'] = {'type': 'Number', 'value': int(station['temperature']['value'])}
-			data['temperature_observed'] = {'type': 'DateTime', 'value': datetime.datetime.fromtimestamp(station['temperature']['key'] / 1e3).strftime('%Y-%m-%dT%H-%M-%S')}
+			data['temperature_observed'] = {'type': 'DateTime', 'value': datetime.datetime.fromtimestamp(station['temperature']['key'] / 1e3).strftime('%Y-%m-%dT%H:%M:%S')}
 			data['stationType'] = {'type': 'Text', 'value': str(station['type'])}
 			data['emptyCnt'] = {'type': 'Number', 'value': int(station['emptyCnt'])}
 			data['ebikeCnt'] = {'type': 'Number', 'value': int(station['ebikeCnt'])}
