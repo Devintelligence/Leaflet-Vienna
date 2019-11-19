@@ -3,7 +3,7 @@ version: '3'
 services:
 
   rentalbikescript:
-    image: rentalbike
+    image: profirator/rentalbike
     environment:
       - PYTHONUNBUFFERED=1
       - orionUri=http://0.0.0.0:1026/
