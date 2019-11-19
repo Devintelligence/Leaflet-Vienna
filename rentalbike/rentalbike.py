@@ -2,6 +2,7 @@ import datetime
 import time
 import requests 
 import urllib3
+import os
 
 requests.packages.urllib3.disable_warnings()
 requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
@@ -15,12 +16,13 @@ while True:
 	try:
 		start_time = datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
 		print("Program starts running at ", start_time)
+		orionUri = os.getenv('orionUri', 'http://0.0.0.0:1026/') + 'v2/entities'
+		print('Orion Uri: ', orionUri)
 		response = requests.get( 'https://syctest-i.sycube.at/preprod/service/si.json', auth=('test', 'test'), verify=False)
 		station_data = response.json()['stationlist']
 		station_list = []
-		data_type = 'RentalBikeStationtest24'
+		data_type = 'RentalBikeStation'
 		headers = {"Content-Type": "application/json", 'Accept': 'application/json'}
-		orionUri = "http://0.0.0.0:1026/v2/entities"
 		for station in station_data:
 			data = {'id': str(data_type) + ':' + str(station['id']), 'type': data_type}
 			data['name'] = {'type': 'Text', 'value': station['name']}
