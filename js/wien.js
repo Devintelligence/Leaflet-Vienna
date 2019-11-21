@@ -10,7 +10,7 @@ var train = L.icon({
 });
 
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     initSearchField();
 
@@ -22,20 +22,21 @@ $(document).ready(function () {
 
     initLayerButton();
 
+    initRealtime("rentalbike");
 
 
 
 });
 
 function initLayerButton() {
-    $("#layer-link").click(function () {
+    $("#layer-link").click(function() {
         $("#list").toggle();
     });
 }
 
 function initLayerAction() {
 
-    $("#list").off("click", ".addLayer").on("click", ".addLayer", function () {
+    $("#list").off("click", ".addLayer").on("click", ".addLayer", function() {
 
         let LAYERID = $(this).attr("id");
         if (customLayer[LAYERID]) {
@@ -72,20 +73,52 @@ function initLayerAction() {
 
 
 
+function initRealtime(entity) {
+    var url = 'http://moft.apinf.io:8080/contextbroker/v2/entities/';
+    jQuery.ajaxPrefilter(function(options) {
+        if (options.crossDomain && jQuery.support.cors) {
+            options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+        }
+    });
+    $.ajax({
+        url: url,
+        headers: { "fiware-service": entity, "x-pvp-roles": "fiware(" + entity + "=ql:r+cb:w)" },
+        type: "GET",
+        success: function(result) {
 
+
+            let link = "<a href='javascript:void(0);' class='download' data-type='entity' data-download-type='csv'>Download CSV</a> | <a href='javascript:void(0);' class='download' data-type='entity' data-download-type='json'>Download JSON</a>"
+                // for (r in result) {
+            marker = L.marker([48.154104, 16.441505], {
+                icon: train
+            }).addTo(mymap).bindPopup("<h3>" + result[0].id + "</h3>Temperatur:" + result[0].temperature.value + "<br>Fahrräder: " + result[0].boxAvailCnt.value + "<br>E-Bikes: " + result[0].ebikeCnt.value + "<hr>" + link, {
+                maxWidth: 560,
+                minWidth: 550
+
+            }).openPopup();
+            //   }
+
+            console.log(result)
+        },
+        error: function(result) {
+            console.log(result)
+        }
+    });
+}
 
 function loadBaseLayer() {
     L.Map = L.Map.extend({
-        openPopup: function (popup) {
-            this._popup = popup;
-            return this.addLayer(popup).fire('popupopen', {
-                popup: this._popup
-            });
-        }
-    })
-    //http://www.wien.gv.at/wmts/fmzk/pastell/google3857/{z}/{y}/{x}.jpeg
+            openPopup: function(popup) {
+                this._popup = popup;
+                return this.addLayer(popup).fire('popupopen', {
+                    popup: this._popup
+                });
+            }
+        })
+        //http://www.wien.gv.at/wmts/fmzk/pastell/google3857/{z}/{y}/{x}.jpeg
     var ign = new L.tileLayer("http://www.wien.gv.at/wmts/lb2014/farbe/google3857/{z}/{y}/{x}.jpeg", {
-        maxZoom: 19, minZoom: 11,
+        maxZoom: 19,
+        minZoom: 11,
         attribution: ''
     });
 
@@ -93,27 +126,27 @@ function loadBaseLayer() {
 
     mymap.addLayer(ign);
 
-    loadWienerLinien(ign);
+    //loadWienerLinien(ign);
 
 
 
 }
 
 function initSearchField() {
-    $("#myInput").on("keyup", function () {
+    $("#myInput").on("keyup", function() {
         var value = $(this).val().toLowerCase();
-        $("#list li").filter(function () {
+        $("#list li").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
 }
 
 function loadLayers() {
-    $.getJSON("layers.json", function (data) {
+    $.getJSON("layers.json", function(data) {
 
 
         var items = [];
-        $.each(data, function (key, val) {
+        $.each(data, function(key, val) {
             items.push("<li id='" + val.name + "' class='addLayer'><a href='#'>" + val.title + "</a></li>");
         });
 
@@ -145,20 +178,20 @@ function addWFSLayer(LAYERID) {
         url: URL,
         dataType: 'jsonp',
         jsonpCallback: 'getJson',
-        success: function (response) {
+        success: function(response) {
             customMarkerLayer[LAYERID] = L.geoJson(response, {
-                style: function (feature) {
+                style: function(feature) {
                     return {
                         stroke: false,
                         fillColor: 'FFFFFF',
                         fillOpacity: 0
                     };
                 },
-                onEachFeature: function (feature, layer) {
+                onEachFeature: function(feature, layer) {
 
                     var text = "<table>";
 
-                    $.each(feature.properties, function (i, n) {
+                    $.each(feature.properties, function(i, n) {
 
                         if (n != null && n != 'null' && n != '' && !i.includes("_") && i != 'OBJECTID' && !i.includes('TXT')) {
                             text = text + "<tr>" + "<td>" + i + "</td><td>" + n + "</td></tr>";
@@ -169,8 +202,7 @@ function addWFSLayer(LAYERID) {
                     text = text + "</table>";
 
                     popupOptions = {};
-                    layer.bindPopup(text
-                            , popupOptions);
+                    layer.bindPopup(text, popupOptions);
                 }
             });
 
@@ -180,8 +212,8 @@ function addWFSLayer(LAYERID) {
 }
 var marker;
 var first = true;
-function loadWienerLinien(ign)
-{
+
+function loadWienerLinien(ign) {
 
     let request = new Request('/wien/api.php');
     runRequest(request, ign)
@@ -197,40 +229,36 @@ function loadWienerLinien(ign)
 
 }
 
-function runRequest(request, ign)
-{
+function runRequest(request, ign) {
 
     fetch(request)
-            .then(res => res.json())
-            .then(data => {
-                let monitors = data.data.monitors;
-                for (monitor in monitors)
-                {
-                    let currentMonitor = monitors[monitor];
-                    let departures = currentMonitor.lines[0].departures.departure
+        .then(res => res.json())
+        .then(data => {
+            let monitors = data.data.monitors;
+            for (monitor in monitors) {
+                let currentMonitor = monitors[monitor];
+                let departures = currentMonitor.lines[0].departures.departure
 
-                    let departureHTML = "";
-                    for (departure in departures)
-                    {
-                        departureHTML += "<div style='width:340px;'>Abfahrt in <b>" + departures[departure].departureTime.countdown + " Minuten </b> <br> Geplant: <b>" + moment(departures[departure].departureTime.timePlanned).format("H:mm") + " Uhr</b><br> Real: <b>" + moment(departures[departure].departureTime.timeReal).format("H:mm") + " Uhr</b></div><hr>";
-                    }
-
-
-                    if (first)
-                    {
-                        marker = L.marker([currentMonitor.locationStop.geometry.coordinates[1], currentMonitor.locationStop.geometry.coordinates[0]], {
-                            icon: train
-                        }).addTo(mymap).bindPopup("<h3>" + currentMonitor.locationStop.properties.title + " </h3>" + departureHTML, {
-                            maxWidth: 560,
-                            minWidth: 550
-
-                        }).openPopup();
-                        first = false;
-                    } else {
-                        marker._popup.setContent("<h3>" + currentMonitor.locationStop.properties.title + " </h3>" + departureHTML)
-                    }
-
+                let departureHTML = "";
+                for (departure in departures) {
+                    departureHTML += "<div style='width:340px;'>Abfahrt in <b>" + departures[departure].departureTime.countdown + " Minuten </b> <br> Geplant: <b>" + moment(departures[departure].departureTime.timePlanned).format("H:mm") + " Uhr</b><br> Real: <b>" + moment(departures[departure].departureTime.timeReal).format("H:mm") + " Uhr</b></div><hr>";
                 }
 
-            })
+
+                if (first) {
+                    marker = L.marker([currentMonitor.locationStop.geometry.coordinates[1], currentMonitor.locationStop.geometry.coordinates[0]], {
+                        icon: train
+                    }).addTo(mymap).bindPopup("<h3>" + currentMonitor.locationStop.properties.title + " </h3>" + departureHTML, {
+                        maxWidth: 560,
+                        minWidth: 550
+
+                    }).openPopup();
+                    first = false;
+                } else {
+                    marker._popup.setContent("<h3>" + currentMonitor.locationStop.properties.title + " </h3>" + departureHTML)
+                }
+
+            }
+
+        })
 }
