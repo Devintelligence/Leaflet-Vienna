@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+
+  rentalbikescript:
+    image: trigynravishankar/profirator:rentalbike
+    environment:
+      - PYTHONUNBUFFERED=1
+      - orionUri=http://0.0.0.0:1026/
