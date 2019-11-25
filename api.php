@@ -1,7 +1,7 @@
 <?php
 
 
-
+curl -vvv -H "fiware-service: temperature" -h "x-pvp-roles: fiware(temperature=ql:r+cb:w)" moft.apinf.io:8080/contextbroker/v2/
 
 
 

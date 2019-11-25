@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Wien</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/leaflet.css" />
     <link rel="stylesheet" href="css/wien.css" />
-	   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
     <script src="js/leaflet.js"></script>
     <script src="js/leaflet-tilelayer-wmts.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/wien.js"></script>
+    <script src="js/orioncontextbroker.js"></script>
+    <script src="js/quantumleap.js"></script>
+
 </head>
+
 <body>
     <div class="header">
         <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg">
@@ -21,14 +26,15 @@
 
     <div id="layers">
         <h2><a href="#" id="layer-link" class="show-layers">Layers</a></h2>
-       
+
     </div>
     <div id="list">
         <input id="myInput" type="text" placeholder="Search..">
     </div>
     <div id="mapid"></div>
     <div class="footer">
-            <div class="footer-text">powered by Fiware</div>
+        <div class="footer-text">powered by Fiware</div>
     </div>
 </body>
+
 </html>
