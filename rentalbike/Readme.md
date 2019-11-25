@@ -4,7 +4,7 @@ In docker compose change the orionUri to your context broker url.
 orionUri=http://0.0.0.0:1026/
 
 To Build:
-docker build -t "rentalbike:latest" .
+docker build -t "profirator/rentalbike:latest" .
 
 Run Using docker compose:
 docker-compose -f docker-compose-dev.yml up -d

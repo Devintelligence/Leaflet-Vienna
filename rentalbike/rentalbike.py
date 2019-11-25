@@ -3,6 +3,7 @@ import time
 import requests 
 import urllib3
 import os
+import configparser
 
 requests.packages.urllib3.disable_warnings()
 requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
@@ -18,11 +19,15 @@ while True:
 		print("Program starts running at ", start_time)
 		orionUri = os.getenv('orionUri', 'http://0.0.0.0:1026/') + 'v2/entities'
 		print('Orion Uri: ', orionUri)
-		response = requests.get( 'https://syctest-i.sycube.at/preprod/service/si.json', auth=('test', 'test'), verify=False)
+		config = configparser.ConfigParser()
+		config.read('/rentalbike.ini')
+		url = config['rentalbike']['url']
+		username = config['rentalbike']['username']
+		password = config['rentalbike']['password']
+		response = requests.get( url, auth=(username, password), verify=False)
 		station_data = response.json()['stationlist']
-		station_list = []
 		data_type = 'RentalBikeStation'
-		headers = {"fiware-service": "rentalbike", "Content-Type": "application/json", 'Accept': 'application/json', }
+		headers = {"fiware-service": "rentalbike", "Content-Type": "application/json", 'Accept': 'application/json'}
 		for station in station_data:
 			data = {'id': str(data_type) + ':' + str(station['id']), 'type': data_type}
 			data['name'] = {'type': 'Text', 'value': station['name']}
@@ -39,6 +44,7 @@ while True:
 			data['bikeCnt'] = {'type': 'Number', 'value': int(station['bikeCnt'])}
 			data['ip'] = {'type': 'Text', 'value': str(station['ip'])}
 			data['dateObserverd'] = {'type': 'DateTime', 'value': start_time}
+			data['location'] = {'type': 'geo:json', 'value': {'type': 'Point', 'coordinates': [station['location']['x'], station['location']['y']]}}
 			response = requests.post( orionUri , json = data, headers = headers  )
 			print('Post operation --------------------------------------------------------')
 			print('Data', data)
