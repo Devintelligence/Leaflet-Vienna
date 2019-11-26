@@ -8,4 +8,4 @@ services:
       - PYTHONUNBUFFERED=1
       - orionUri=http://192.168.16.112:1026/
     volumes:
-      - "../config/carusoreservationhistory/carusoreservationhistory.ini:/carusoreservationhistory.ini"
+      - "./config/carusoreservationhistory/carusoreservationhistory.ini:/carusoreservationhistory.ini"
