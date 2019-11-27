@@ -20,8 +20,9 @@ let ViennaData = function() {
     let _data = {};
     let _settings = {}
     let _historyData = [];
+    let firstStart = true;
 
-    let _basePopupContent = '<div style="min-width:600px"' +
+    let _basePopupContent = '<div style="min-width:600px">' +
         '<div class="col-xs-6">' +
         '<h3>%HEADLINE%</h3>' +
         '<table width="100%">' +
@@ -29,9 +30,16 @@ let ViennaData = function() {
         '</table>' +
         '</div>' +
         '<div class="col-xs-6">' +
-        '%CHART%'
-    '</div>' +
-    '</div>';
+        '%CHART%' +
+        '</div>' +
+        '</div>';
+
+    let _tabTemplate = '<div id="tabs">' +
+        '<ul>' +
+        '%TABSLINKS%' +
+        '</ul>' +
+        '%TABCONTENT%' +
+        '</div>';
 
     return {
         init: function(map, data, settings) {
@@ -56,31 +64,42 @@ let ViennaData = function() {
                 type: "GET",
                 success: function(result) {
 
-                    for (res in result) {
 
-                        let item = result[res];
+
+                    if (settings.entity == "vienna_buildings") {
+                        let item = result[1];
 
                         if (item.location != undefined) {
+
+
                             console.log(item.id);
 
                             let lat = item.location.value.coordinates[0];
                             let lng = item.location.value.coordinates[1];
 
-                            if (settings.entity == "rentalbike") {
-
-                                lat = item.location.value.coordinates[1];
-                                lng = item.location.value.coordinates[0];
-                            }
                             let marker = L.marker([lat, lng], {
                                 icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
-                            }).addTo(_map).bindPopup(self.getItemContent(settings.entity, item), {
-                                maxWidth: 560,
-                                minWidth: 550
+                            }).addTo(_map).bindPopup(self.getTabbedContent(settings.entity, result), {
+                                maxWidth: 1000,
+                                minWidth: 1000
 
                             });
                             marker.on('click', function(e) {
+
+
+                                $(".tabitem").click(function() {
+                                    $(".tabContent").hide();
+                                    $(".tabContent" + $(this).attr("href")).show();
+                                });
+
+
+                                for (res in result) {
+
+                                    let item = result[res];
+                                    self.buildChart(item.id, settings.entity);
+                                }
                                 //if (settings.entity == "rentalbike") {
-                                self.buildChart(item.id, settings.entity);
+
                                 //  }
 
                             });
@@ -88,6 +107,44 @@ let ViennaData = function() {
 
                         }
 
+
+                    } else {
+
+
+
+                        for (res in result) {
+
+                            let item = result[res];
+
+                            if (item.location != undefined) {
+                                console.log(item.id);
+
+                                let lat = item.location.value.coordinates[0];
+                                let lng = item.location.value.coordinates[1];
+
+                                if (settings.entity == "rentalbike") {
+
+                                    lat = item.location.value.coordinates[1];
+                                    lng = item.location.value.coordinates[0];
+                                }
+                                let marker = L.marker([lat, lng], {
+                                    icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
+                                }).addTo(_map).bindPopup(self.getItemContent(settings.entity, item), {
+                                    maxWidth: 560,
+                                    minWidth: 550
+
+                                });
+                                marker.on('click', function(e) {
+                                    //if (settings.entity == "rentalbike") {
+                                    self.buildChart(item.id, settings.entity);
+                                    //  }
+
+                                });
+
+
+                            }
+
+                        }
                     }
 
 
@@ -100,41 +157,71 @@ let ViennaData = function() {
         },
         getHistoryData: function(id, entity) {
 
-            var fromDate = "2019-11-01";
-            var toDate = "2019-11-29";
-            var downloadType = "json";
 
-            var data = { 'fromDate': fromDate }
+            if (firstStart) {
 
-            data['toDate'] = toDate;
-            var url = 'http://moft.apinf.io:8080/quantumleap/v2/entities/' + id;
-            $.ajax({
-                url: url,
-                headers: { "fiware-service": entity, "fiware-servicepath": "/", "x-pvp-roles": "fiware(" + entity + "=ql:r+cb:w)" },
-                type: "GET",
-                data: data,
-                success: function(result) {
+                firstStart = false;
+                var fromDate = "2019-11-01";
+                var toDate = "2019-11-29";
+                var downloadType = "json";
 
-                    _historyData[id] = result;
-                    /*  if (downloadType == 'csv') {
-                          self.downloadCsv(result, id)
-                      } else {
-                          self.downloadJson(result, id);
-                      }*/
+                var data = { 'fromDate': fromDate }
 
-                },
-                error: function(result) {
-                    //  self.downloadJson(result.responseJSON, entityID);
+                data['toDate'] = toDate;
+                var url = 'http://moft.apinf.io:8080/quantumleap/v2/entities/' + id;
+                $.ajax({
+                    url: url,
+                    headers: { "fiware-service": entity, "fiware-servicepath": "/", "x-pvp-roles": "fiware(" + entity + "=ql:r+cb:w)" },
+                    type: "GET",
+                    data: data,
+                    success: function(result) {
+
+                        store.setItem("quantum_" + entity, JSON.stringify(result), function() {
+                            _historyData[id] = result;
+                        });
+
+
+                        /*  if (downloadType == 'csv') {
+                              self.downloadCsv(result, id)
+                          } else {
+                              self.downloadJson(result, id);
+                          }*/
+
+                    },
+                    error: function(result) {
+                        //  self.downloadJson(result.responseJSON, entityID);
+                    }
+                });
+            }
+
+        },
+
+        getTabbedContent: function(entity, result) {
+
+            let links = '';
+
+            let content = '';
+            for (res in result) {
+                if (res != 0) {
+                    let item = result[res];
+                    links += '<li><a href="#' + item.id + '" class="tabitem">"' + item.id + '"</a></li>';
+                    content += "<div  class='tabContent' style='display:none;' id='" + item.id + "'>" + self.getItemContent(entity, item) + "</div>";
+
                 }
-            });
+            }
+
+            console.log(_tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%TABCONTENT%/gi, content));
+            return _tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%TABCONTENT%/gi, content);
         },
         getItemContent: function(entity, item) {
+
+
             self.getHistoryData(item.id, entity);
             let tableRows = "";
             let chart = "";
 
 
-            chart = '<div id="chartContainer" style="height: 300px; width: 100%;"></div>';
+            chart = '<div id="chartContainer' + item.id.replace(/_/gi, "") + '" style="height: 300px; width: 100%;"></div>';
 
             for (var key in item) {
 
@@ -151,40 +238,44 @@ let ViennaData = function() {
         },
 
         buildChart: function(id, entity) {
-            let currentData = _historyData[id];
-            let valueIndex = (entity == "rentalbike") ? 1 : 2;
 
-            let points = [];
+            store.getItem("quantum_" + entity, function(err, result) {
+                let currentData = JSON.parse(result);
+                let valueIndex = (entity == "rentalbike") ? 1 : 2;
 
-            for (i in currentData.index) {
-                let point = {}
-                point.x = moment(currentData.index[i]).toDate();
-                point.y = currentData.attributes[valueIndex].values[i];
+                let points = [];
 
-                points.push(point);
+                for (i in currentData.index) {
+                    let point = {}
+                    point.x = moment(currentData.index[i]).toDate();
+                    point.y = currentData.attributes[valueIndex].values[i];
+
+                    points.push(point);
 
 
-            }
+                }
 
-            var chart = new CanvasJS.Chart("chartContainer", {
+                var chart = new CanvasJS.Chart("chartContainer" + id.replace(/_/gi, ""), {
 
-                title: {
-                    text: "History Data for" + id
-                },
-                axisX: {
-                    title: "timeline",
-                    gridThickness: 2
-                },
-                axisY: {
-                    title: currentData.attributes[valueIndex].attrName
-                },
-                data: [{
-                    type: "stepArea",
-                    xValueType: "dateTime",
-                    dataPoints: points
-                }]
+                    title: {
+                        text: "History Data for" + id
+                    },
+                    axisX: {
+                        title: "timeline",
+                        gridThickness: 2
+                    },
+                    axisY: {
+                        title: currentData.attributes[valueIndex].attrName
+                    },
+                    data: [{
+                        type: "stepArea",
+                        xValueType: "dateTime",
+                        dataPoints: points
+                    }]
+                });
+                chart.render();
+
             });
-            chart.render();
 
         },
 

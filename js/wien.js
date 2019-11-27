@@ -2,7 +2,9 @@ var customLayer = {};
 var customMarkerLayer = {};
 var mymap = null;
 
-
+let store = localforage.createInstance({
+    name: 'vienna'
+});
 
 $(document).ready(function() {
 
