@@ -1,13 +1,7 @@
 var customLayer = {};
 var customMarkerLayer = {};
 var mymap = null;
-var train = L.icon({
-    iconUrl: 'train.png',
 
-    iconSize: [32, 37], // size of the icon
-
-    popupAnchor: [-3, -36] // point from which the popup should open relative to the iconAnchor
-});
 
 
 $(document).ready(function() {
@@ -22,15 +16,20 @@ $(document).ready(function() {
 
     initLayerButton();
 
-    initRealtime("rentalbike");
+    // initRealtime("rentalbike");
 
 
 
 });
 
 function initLayerButton() {
-    $("#layer-link").click(function() {
-        $("#list").toggle();
+    $(".layer-link").click(function() {
+        if ($(this).attr("id") == "show-layers") {
+            $("#list").toggle();
+        } else {
+            $("#list_realtime").toggle();
+        }
+
     });
 }
 
@@ -66,6 +65,17 @@ function initLayerAction() {
 
 
         }
+    });
+
+    $("#list_realtime").off("click", ".addRealTime").on("click", ".addRealTime", function() {
+
+
+        const settings = {
+            entity: $(this).attr("id")
+        }
+
+        new ViennaData().init(mymap, null, settings);
+
     });
 
 }

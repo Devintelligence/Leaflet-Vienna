@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="css/leaflet.css" />
     <link rel="stylesheet" href="css/wien.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="js/moment.js"></script>
     <script src="js/leaflet.js"></script>
     <script src="js/leaflet-tilelayer-wmts.js"></script>
     <script src="js/jquery.min.js"></script>
+
+    <script src="js/ViennaData.js"></script>
     <script src="js/wien.js"></script>
-    <script src="js/orioncontextbroker.js"></script>
-    <script src="js/quantumleap.js"></script>
 
 </head>
 
@@ -25,11 +26,19 @@
     </div>
 
     <div id="layers">
-        <h2><a href="#" id="layer-link" class="show-layers">Layers</a></h2>
-
+        <h2><a href="#" class="layer-link" id="show-layers">Layers</a></h2>
+        <h2><a href="#" class="layer-link" id="show-realtime">RealTime</a></h2>
     </div>
     <div id="list">
         <input id="myInput" type="text" placeholder="Search..">
+    </div>
+
+    <div id="list_realtime">
+        <ul>
+            <li id="rentalbike" class="addRealTime"><a href="#">RentalBike</a></li>
+            <li id="vienna_buildings" class="addRealTime"><a href="#">Buildings</a></li>
+
+        </ul>
     </div>
     <div id="mapid"></div>
     <div class="footer">
