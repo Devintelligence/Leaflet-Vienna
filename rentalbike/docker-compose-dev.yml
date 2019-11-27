@@ -6,4 +6,6 @@ services:
     image: trigynravishankar/profirator:rentalbike
     environment:
       - PYTHONUNBUFFERED=1
-      - orionUri=http://0.0.0.0:1026/
+      - orionUri=http://192.168.16.112:1026/
+    volumes:
+      - "./config/rentalbike/rentalbike.ini:/rentalbike.ini"

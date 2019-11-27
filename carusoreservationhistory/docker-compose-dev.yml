@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+
+  reservationhistory:
+    image: trigynravishankar/profirator:carusoreservationhistory
+    environment:
+      - PYTHONUNBUFFERED=1
+      - orionUri=http://192.168.16.112:1026/
+    volumes:
+      - "./config/carusoreservationhistory/carusoreservationhistory.ini:/carusoreservationhistory.ini"
