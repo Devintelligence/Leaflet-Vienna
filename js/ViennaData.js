@@ -30,6 +30,7 @@ let ViennaData = function() {
         '</table>' +
         '</div>' +
         '<div class="col-xs-6">' +
+        '%BUTTONS%' +
         '%CHART%' +
         '</div>' +
         '</div>';
@@ -87,16 +88,18 @@ let ViennaData = function() {
                             marker.on('click', function(e) {
 
 
-                                $(".tabitem").click(function() {
-                                    $(".tabContent").hide();
-                                    $(".tabContent" + $(this).attr("href")).show();
-                                });
+                                /*    $(".tabitem").click(function() {
+                                        $(".tabContent").hide();
+                                        $(".tabContent" + $(this).attr("href")).show();
+                                    });*/
 
-
+                                $(document).off("click", ".download-button").on("click", ".download-button", function() {
+                                    self.getHistoryData($(this).attr("data-id"), $(this).attr("data-entity"), $(this).attr("data-type"));
+                                })
                                 for (res in result) {
 
                                     let item = result[res];
-                                    self.buildChart(item.id, settings.entity);
+                                    //     self.buildChart(item.id, settings.entity);
                                 }
                                 //if (settings.entity == "rentalbike") {
 
@@ -136,8 +139,12 @@ let ViennaData = function() {
                                 });
                                 marker.on('click', function(e) {
                                     //if (settings.entity == "rentalbike") {
-                                    self.buildChart(item.id, settings.entity);
+                                    //    self.buildChart(item.id, settings.entity);
                                     //  }
+                                    $(document).off("click", ".download-button").on("click", ".download-button", function() {
+                                        self.getHistoryData($(this).attr("data-id"), $(this).attr("data-entity"), $(this).attr("data-type"));
+                                    })
+
 
                                 });
 
@@ -155,44 +162,43 @@ let ViennaData = function() {
                 }
             });
         },
-        getHistoryData: function(id, entity) {
+        getHistoryData: function(id, entity, downloadType = "json") {
 
 
-            if (firstStart) {
+            // if (firstStart) {
 
-                firstStart = false;
-                var fromDate = "2019-11-01";
-                var toDate = "2019-11-29";
-                var downloadType = "json";
+            firstStart = false;
+            var fromDate = "2019-11-01";
+            var toDate = "2029-11-29";
 
-                var data = { 'fromDate': fromDate }
+            var data = { 'fromDate': fromDate }
 
-                data['toDate'] = toDate;
-                var url = 'http://moft.apinf.io:8080/quantumleap/v2/entities/' + id;
-                $.ajax({
-                    url: url,
-                    headers: { "fiware-service": entity, "fiware-servicepath": "/", "x-pvp-roles": "fiware(" + entity + "=ql:r+cb:w)" },
-                    type: "GET",
-                    data: data,
-                    success: function(result) {
+            data['toDate'] = toDate;
+            var url = 'http://moft.apinf.io:8080/quantumleap/v2/entities/' + id;
+            $.ajax({
+                url: url,
+                headers: { "fiware-service": entity, "fiware-servicepath": "/", "x-pvp-roles": "fiware(" + entity + "=ql:r+cb:w)" },
+                type: "GET",
+                data: data,
+                success: function(result) {
 
-                        store.setItem("quantum_" + entity, JSON.stringify(result), function() {
-                            _historyData[id] = result;
-                        });
+                    store.setItem("quantum_" + id, JSON.stringify(result), function() {
+                        _historyData[id] = result;
+                    });
 
 
-                        /*  if (downloadType == 'csv') {
-                              self.downloadCsv(result, id)
-                          } else {
-                              self.downloadJson(result, id);
-                          }*/
-
-                    },
-                    error: function(result) {
-                        //  self.downloadJson(result.responseJSON, entityID);
+                    if (downloadType == 'csv') {
+                        self.downloadCsv(result, id)
+                    } else {
+                        self.downloadJson(result, id);
                     }
-                });
-            }
+
+                },
+                error: function(result) {
+                    //  self.downloadJson(result.responseJSON, entityID);
+                }
+            });
+            //  }
 
         },
 
@@ -205,7 +211,7 @@ let ViennaData = function() {
                 if (res != 0) {
                     let item = result[res];
                     links += '<li><a href="#' + item.id + '" class="tabitem">"' + item.id + '"</a></li>';
-                    content += "<div  class='tabContent' style='display:none;' id='" + item.id + "'>" + self.getItemContent(entity, item) + "</div>";
+                    content += "<div class='tab ' id='" + item.id + "'><div  class='tabContent'  >" + self.getItemContent(entity, item) + "</div></div>";
 
                 }
             }
@@ -216,12 +222,14 @@ let ViennaData = function() {
         getItemContent: function(entity, item) {
 
 
-            self.getHistoryData(item.id, entity);
+            //  self.getHistoryData(item.id, entity);
             let tableRows = "";
             let chart = "";
 
 
-            chart = '<div id="chartContainer' + item.id.replace(/_/gi, "") + '" style="height: 300px; width: 100%;"></div>';
+            //  chart = '<div id="chartContainer' + item.id.replace(/_/gi, "") + '" style="height: 300px; width: 100%;"></div>';
+
+            buttons = '<div id="buttons"><button class="btn btn-primary download-button" data-type="json" data-id="' + item.id + '" data-entity="' + entity + '">JSON</button> <button class="btn btn-primary download-button" data-type="csv" data-id="' + item.id + '" data-entity="' + entity + '">CSV</button></div>';
 
             for (var key in item) {
 
@@ -232,14 +240,14 @@ let ViennaData = function() {
             }
 
 
-            return _basePopupContent.replace(/%HEADLINE%/gi, item.id).replace(/%TABLEROWS%/gi, tableRows).replace(/%CHART%/gi, chart);
+            return _basePopupContent.replace(/%HEADLINE%/gi, item.id).replace(/%TABLEROWS%/gi, tableRows).replace(/%CHART%/gi, chart).replace(/%BUTTONS%/gi, buttons);
 
 
         },
 
         buildChart: function(id, entity) {
 
-            store.getItem("quantum_" + entity, function(err, result) {
+            store.getItem("quantum_" + id, function(err, result) {
                 let currentData = JSON.parse(result);
                 let valueIndex = (entity == "rentalbike") ? 1 : 2;
 
