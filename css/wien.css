@@ -1,3 +1,7 @@
+    body {
+        font-family: "Open Sans";
+    }
+    
     ul {
         list-style-type: none;
         margin: 0;
@@ -5,7 +9,7 @@
     }
     
     li {
-        font: 15px/1.5 Helvetica, Verdana, sans-serif;
+        font: 15px/1.5 "Open Sans", Helvetica, Verdana, sans-serif;
         border-bottom: 1px solid #ccc;
     }
     
@@ -49,9 +53,17 @@
         display: block;
         position: absolute;
         z-index: 900;
-        left: 20px;
-        top: 120px;
+        left: 114px;
+        top: 0;
         color: white;
+    }
+    
+    #layers h2,
+    #layers h2 a {
+        color: #000;
+        font-size: 1.5rem;
+        margin-top: 8px;
+        font-weight: 300;
     }
     
     #list,
@@ -123,22 +135,33 @@
     
     #tabs {
         position: relative;
-        min-height: 800px;
+        min-height: 560px;
         clear: both;
         margin: 25px 0;
+    }
+    
+    #tabs.buildings {
+        min-height: 890px;
     }
     
     .tab {
         float: left;
         display: none;
-        min-height: 600px;
+        min-height: 505px;
+        position: relative;
+        width: 100%;
+    }
+    
+    .tabsMain {
+        float: left;
+        display: none;
+        min-height: 505px;
         position: relative;
         width: 100%;
     }
     
     #tabs ul li {
         position: relative;
-        height: 20px;
         width: 22.5%;
     }
     
@@ -177,4 +200,9 @@
     
     .tab:target {
         display: block;
+    }
+    
+    select {
+        color: #0078A8;
+        border: 0;
     }

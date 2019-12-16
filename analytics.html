@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Wien</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/wien.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+    <script src="js/moment.js"></script>
+    <script src="js/localforage.min.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="js/leaflet-tilelayer-wmts.js"></script>
+    <script src="js/jquery.min.js"></script>
+
+
+
+    <script src="js/ViennaData.js"></script>
+    <script src="js/wien.js"></script>
+
+    <script>
+        let basePath = "http://moft.apinf.io:8080/";
+        $(document).ready(function() {
+            var url = basePath + 'grafana/api/search?folderIds=0&query=&starred=false';
+            jQuery.ajaxPrefilter(function(options) {
+                if (options.crossDomain && jQuery.support.cors) {
+                    options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+                }
+            });
+
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    for (r in result) {
+
+
+                        $("#stats").append(' <iframe src="https://stp-test.wien.gv.at:4543' + result[r].url.replace("/d/", "/d-solo/") + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>');
+
+
+                    }
+                }
+
+            });
+
+        });
+    </script>
+
+</head>
+
+<body>
+    <div class="header">
+        <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg">
+        <span class="header-text">Wien GIS</span>
+        <div id="layers">
+            <h2 style="float: left;margin-right: 10px;"><a href="index.html">Start</a> | </h2>
+            <h2 style="float: left;margin-right: 10px;"><a href="analytics.html">Statistiken</a> | </h2>
+
+
+        </div>
+
+    </div>
+
+    <br>
+    <br>
+    <div id="stats">
+
+
+    </div>
+    <div class="footer">
+        <div class="footer-text">powered by FIWARE</div>
+    </div>
+</body>
+
+</html>

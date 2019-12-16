@@ -1,53 +1,105 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-    <title>Wien</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>SmartCity Wien</title>
+
+
+
+    <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="css/wien.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-
-    <script src="js/moment.js"></script>
-    <script src="js/localforage.min.js"></script>
-    <script src="js/leaflet.js"></script>
-    <script src="js/leaflet-tilelayer-wmts.js"></script>
-    <script src="js/jquery.min.js"></script>
-
-
-
-    <script src="js/ViennaData.js"></script>
-    <script src="js/wien.js"></script>
-
 </head>
 
 <body>
-    <div class="header">
+
+    <header>
         <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg">
-        <span class="header-text">Vienna GIS</span>
-    </div>
+        <span class="header-text">Smart City Wien</span>
+        <br>
+        <br>
+    </header>
 
-    <div id="layers">
-        <h2><a href="#" class="layer-link" id="show-layers">Layers</a></h2>
-        <h2><a href="#" class="layer-link" id="show-realtime">RealTime</a></h2>
-    </div>
-    <div id="list">
-        <input id="myInput" type="text" placeholder="Search..">
-    </div>
+    <main role="main">
 
-    <div id="list_realtime">
-        <ul>
-            <li id="rentalbike" class="addRealTime"><a href="#">RentalBike</a></li>
-            <li id="vienna_buildings" class="addRealTime"><a href="#">Buildings</a></li>
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
-        </ul>
-    </div>
-    <div id="mapid"></div>
-    <div class="footer">
-        <div class="footer-text">powered by Fiware</div>
-    </div>
+            <div class="text-center">
+                <img class="first-slide" src="img/header.jpg" class="img-fluid mx-auto">
+
+
+
+            </div>
+
+        </div>
+        <br>
+        <br>
+
+        <!-- Marketing messaging and featurettes
+      ================================================== -->
+        <!-- Wrap the rest of the page in another container to center all the content. -->
+
+        <div class="container marketing">
+
+            <!-- Three columns of text below the carousel -->
+            <div class="row  justify-content-md-center">
+                <div class="col-lg-4 text-center" style="position: relative;">
+                    <a href="map.html?t=rentalbike">
+                        <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+
+                        <i class="fa fa-bicycle" style="
+                    position: absolute;
+                    left: 152px;
+                    font-size: 65px;
+                    top: 35px;
+                    color: #fff;
+                    "></i>
+                        <h2>Bike Sharing (Sycube)</h2>
+                    </a>
+
+                </div>
+                <!-- /.col-lg-4 -->
+                <div class="col-lg-4  text-center" style="position: relative;">
+                    <a href="map.html?t=vienna_buildings">
+                        <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+                        <i class="fa fa-building" style="
+                    position: absolute;
+                    left: 162px;
+                    font-size: 65px;
+                    top: 35px;
+                    color: #fff;
+                    "></i>
+                        <h2>Building</h2>
+
+                    </a>
+
+                </div>
+                <!-- /.col-lg-4
+                <div class="col-lg-4">
+                    <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+                    <h2>Heading</h2>
+                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit
+                        amet risus.</p>
+                    <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+                </div>
+                 /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+
+
+            <div class="footer">
+                <div class="footer-text">powered by FIWARE</div>
+            </div>
+    </main>
+
+
 </body>
 
 </html>
