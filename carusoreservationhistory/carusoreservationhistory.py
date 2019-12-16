@@ -44,7 +44,7 @@ while True:
 			data['modified'] = {'type': 'DateTime', 'value': parser.parse(res['modified']).strftime('%Y-%m-%dT%H:%M:%S')}
 			data['date_observerd'] = {'type': 'DateTime', 'value': start_time}
 			data['user_id'] = {'type': 'Text', 'value': str(res['user_id'])}
-			utilization_start = utilization_end = ""
+			utilization_start = utilization_end = start_time
 			batterylevel_at_start = batterylevel_at_end = -1
 			if 'state_of_charge' in res and res['state_of_charge']:
 				if 'utilization_start' in res['state_of_charge'] and 'date_time' in res['state_of_charge']['utilization_start']:
@@ -53,9 +53,9 @@ while True:
 				if 'utilization_end' in res['state_of_charge'] and 'date_time' in res['state_of_charge']['utilization_end']:
 					utilization_end = parser.parse(res['state_of_charge']['utilization_end']['date_time']).strftime('%Y-%m-%dT%H:%M:%S')
 					batterylevel_at_end = res['state_of_charge']['utilization_end']['batterylevel']
-			data['utilization_start'] = {'type': 'Text', 'value':utilization_start}
+			data['utilization_start'] = {'type': 'DateTime', 'value':utilization_start}
 			data['batterylevel_at_start'] = {'type': 'Number', 'value': batterylevel_at_start}
-			data['utilization_end'] = {'type': 'Text', 'value':utilization_end}
+			data['utilization_end'] = {'type': 'DateTime', 'value':utilization_end}
 			data['batterylevel_at_end'] = {'type': 'Number', 'value': batterylevel_at_end}
 			response = requests.post( orionUri , json = data, headers = headers  )
 			print('Post operation --------------------------------------------------------')
