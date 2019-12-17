@@ -15,29 +15,36 @@ var viennabuildings = L.icon({
 });
 
 let ViennaData = function() {
-
+    let basePath = "https://stp-test.wien.gv.at:4543";
     let _map = null;
     let _data = {};
     let _settings = {}
     let _historyData = [];
     let firstStart = true;
+    let _charts = [];
 
     let _basePopupContent = '<div style="min-width:600px">' +
-        '<div class="col-xs-6">' +
+        '<div class="col-xs-12">' +
         '<h3>%HEADLINE%</h3>' +
-        '<table width="100%">' +
-        '%TABLEROWS%' +
-        '</table>' +
-        '</div>' +
-        '<div class="col-xs-6">' +
-        '%BUTTONS%' +
-        '%CHART%' +
-        '</div>' +
-        '</div>';
-
-    let _tabTemplate = '<div id="tabs">' +
+        '<div id="tabs">' +
         '<ul>' +
         '%TABSLINKS%' +
+        '</ul>' +
+        '%CONTENT%' +
+
+        '</div>' +
+        '</div>' +
+
+        '</div>';
+
+    let _tabTemplate = '<div id="tabs" >' +
+        '<ul>' +
+        '%MORETABS%' +
+        '<li style="width:auto">' +
+        '<select class="switcher">' +
+        '%TABSLINKS%' +
+        '</select>' +
+        '</li>' +
         '</ul>' +
         '%TABCONTENT%' +
         '</div>';
@@ -47,13 +54,42 @@ let ViennaData = function() {
             self = this;
             _map = map;
             _data = data;
+            self.getGrafanaCharts(settings);
 
-            self.getData(settings);
 
         },
 
+        getGrafanaCharts: function(settings) {
+            var url = 'http://moft.apinf.io:8080/grafana/api/search?folderIds=0&query=&starred=false';
+
+            jQuery.ajaxPrefilter(function(options) {
+                if (options.crossDomain && jQuery.support.cors) {
+                    options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+                }
+            });
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    for (r in result) {
+                        if (_charts[result[r]["title"]] == undefined) {
+                            _charts[result[r]["title"]] = [];
+                        }
+
+                        result[r].url = result[r].url.replace("/d/", "/d-solo/");
+
+                        _charts[result[r]["title"]] = result[r];
+                    }
+                    console.log(_charts);
+                    self.getData(settings);
+                }
+
+            });
+        },
+
         getData: function(settings) {
-            var url = 'http://moft.apinf.io:8080/contextbroker/v2/entities/';
+            var url = 'http://moft.apinf.io:8080/contextbroker/v2/entities/?limit=200';
             jQuery.ajaxPrefilter(function(options) {
                 if (options.crossDomain && jQuery.support.cors) {
                     options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
@@ -65,51 +101,76 @@ let ViennaData = function() {
                 type: "GET",
                 success: function(result) {
 
+                    $(document).off("click", ".tabMainLink").on("click", ".tabMainLink", function() {
+
+                        $(".tabsMain").hide();
+                        $(".tabsMain" + $(this).attr("href")).show();
+
+                        if (window.location.hash) {
+                            window.location.hash;
+                        } else {
+                            window.location.hash = '#chart';
+                        };
+                    });
+
+                    $(document).on("change", ".switcher", function() {
+
+                        $(".detailTable").hide();
+
+                        $("#" + $(this).val()).show();
+
+                        $("#chart_undefined").hide();
+                    });
 
 
+                    $(document).off("click", ".chartTab").on("click", ".chartTab", function() {
+
+                        $(".detailTable").hide();
+
+
+                        $("#chart_undefined").show();
+                    });
                     if (settings.entity == "vienna_buildings") {
-                        let item = result[1];
-
-                        if (item.location != undefined) {
 
 
-                            console.log(item.id);
+                        let buildings = [];
+                        for (r in result) {
 
-                            let lat = item.location.value.coordinates[0];
-                            let lng = item.location.value.coordinates[1];
-
-                            let marker = L.marker([lat, lng], {
-                                icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
-                            }).addTo(_map).bindPopup(self.getTabbedContent(settings.entity, result), {
-                                maxWidth: 1000,
-                                minWidth: 1000
-
-                            });
-                            marker.on('click', function(e) {
-
-
-                                /*    $(".tabitem").click(function() {
-                                        $(".tabContent").hide();
-                                        $(".tabContent" + $(this).attr("href")).show();
-                                    });*/
-
-                                $(document).off("click", ".download-button").on("click", ".download-button", function() {
-                                    self.getHistoryData($(this).attr("data-id"), $(this).attr("data-entity"), $(this).attr("data-type"));
-                                })
-                                for (res in result) {
-
-                                    let item = result[res];
-                                    //     self.buildChart(item.id, settings.entity);
-                                }
-                                //if (settings.entity == "rentalbike") {
-
-                                //  }
-
-                            });
-
+                            let item = result[r];
+                            let splitted = item.id.split("_");
+                            if (buildings[splitted[0]] == undefined) {
+                                buildings[splitted[0]] = [];
+                            }
+                            buildings[splitted[0]].push(item);
 
                         }
 
+                        for (b in buildings) {
+                            let item = buildings[b][0];
+                            if (item.location != undefined) {
+
+
+                                let lat = item.location.value.coordinates[0];
+                                let lng = item.location.value.coordinates[1];
+
+                                let marker = L.marker([lat, lng], {
+                                    icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
+                                }).addTo(_map).bindPopup(self.getTabbedContent(settings.entity, buildings[b], b), {
+                                    maxWidth: 1000,
+                                    minWidth: 1000
+
+                                });
+                                marker.on('click', function(e) {
+                                    if (window.location.hash) {
+                                        window.location.hash;
+                                    } else {
+                                        window.location.hash = '#chart_undefined';
+                                    };
+                                });
+
+
+                            }
+                        }
 
                     } else {
 
@@ -120,7 +181,7 @@ let ViennaData = function() {
                             let item = result[res];
 
                             if (item.location != undefined) {
-                                console.log(item.id);
+
 
                                 let lat = item.location.value.coordinates[0];
                                 let lng = item.location.value.coordinates[1];
@@ -138,13 +199,11 @@ let ViennaData = function() {
 
                                 });
                                 marker.on('click', function(e) {
-                                    //if (settings.entity == "rentalbike") {
-                                    //    self.buildChart(item.id, settings.entity);
-                                    //  }
-                                    $(document).off("click", ".download-button").on("click", ".download-button", function() {
-                                        self.getHistoryData($(this).attr("data-id"), $(this).attr("data-entity"), $(this).attr("data-type"));
-                                    })
-
+                                    if (window.location.hash) {
+                                        window.location.hash;
+                                    } else {
+                                        window.location.hash = '#chart';
+                                    };
 
                                 });
 
@@ -202,34 +261,65 @@ let ViennaData = function() {
 
         },
 
-        getTabbedContent: function(entity, result) {
+        getTabbedContent: function(entity, result, type) {
 
             let links = '';
 
             let content = '';
+            let tabs = '';
+
+            let chart = "<h6>Um die historischen Daten herunter zuladen, wechseln Sie bitte zu den Statistiken</h6>";
+
+
+            if (_charts[type] != undefined) {
+
+                chart += '<iframe src="https://stp-test.wien.gv.at:4543' + _charts[type].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
+
+            } else {
+                chart = "";
+            }
+
+
+            let tableRows = "";
+
+
             for (res in result) {
                 if (res != 0) {
                     let item = result[res];
-                    links += '<li><a href="#' + item.id + '" class="tabitem">"' + item.id + '"</a></li>';
-                    content += "<div class='tab ' id='" + item.id + "'><div  class='tabContent'  >" + self.getItemContent(entity, item) + "</div></div>";
 
+                    tableRows += "<table id='" + item.id + "' class='detailTable' width='100%' style='display:none'>";
+                    tableRows += "<tr><th colspan='" + (item.length - 2) + "'><h5>" + item.id + "</h5></th></tr>";
+                    links += '<option value="' + item.id + '">' + item.id + '</option>';
+
+                    for (var key in item) {
+
+                        if (key != "location" && key != "id" && key != "type" && key != "ip") {
+                            tableRows += "<tr><td>" + key + "</td><td>" + item[key].value + "</td></tr>";
+                        }
+
+                    }
+                    tableRows += "</table>";
                 }
             }
 
-            console.log(_tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%TABCONTENT%/gi, content));
-            return _tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%TABCONTENT%/gi, content);
+            content += tableRows;
+            tabs += '<li><a href="#chart_' + entity.id + '" class="tabitem chartTab" id="">Statistik</a></li>';
+            content += "<div class='tab ' id='chart_" + entity.id + "'  ><div  class='tabContent' style='padding:5px;'>" + chart + "</div></div>";
+            return _tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%MORETABS%/gi, tabs).replace(/%TABCLASS%/gi, "buildings").replace(/%TABCONTENT%/gi, content);
         },
         getItemContent: function(entity, item) {
 
 
-            //  self.getHistoryData(item.id, entity);
-            let tableRows = "";
-            let chart = "";
+            let tableRows = "<table>";
+            let chart = "<h6>Um die historischen Daten herunter zuladen, wechseln Sie bitte zu den Statistiken</h6>";
+            let links = "";
+            let content = "";
 
 
-            //  chart = '<div id="chartContainer' + item.id.replace(/_/gi, "") + '" style="height: 300px; width: 100%;"></div>';
+            chart += '<iframe src="https://stp-test.wien.gv.at:4543' + _charts[item.id].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
 
-            buttons = '<div id="buttons"><button class="btn btn-primary download-button" data-type="json" data-id="' + item.id + '" data-entity="' + entity + '">JSON</button> <button class="btn btn-primary download-button" data-type="csv" data-id="' + item.id + '" data-entity="' + entity + '">CSV</button></div>';
+
+            buttons = "";
 
             for (var key in item) {
 
@@ -239,8 +329,16 @@ let ViennaData = function() {
 
             }
 
+            tableRows += "</table>";
+            links += '<li><a href="#chart_' + item.id + '" class="tabitem chartTab" id="">Statistik</a></li>';
+            content += "<div class='tab ' id='chart_" + item.id + "'  ><div  class='tabContent' >" + chart + "</div></div>";
 
-            return _basePopupContent.replace(/%HEADLINE%/gi, item.id).replace(/%TABLEROWS%/gi, tableRows).replace(/%CHART%/gi, chart).replace(/%BUTTONS%/gi, buttons);
+            links += '<li><a href="#table_' + item.id + '" class="tabitem">Information</a></li>';
+            content += "<div class='tab ' id='table_" + item.id + "'><div  class='tabContent'  >" + tableRows + "</div></div>";
+
+
+
+            return _basePopupContent.replace(/%HEADLINE%/gi, item.id).replace(/%TABCLASS%/gi, "").replace(/%TABSLINKS%/gi, links).replace(/%CONTENT%/gi, content).replace(/%CHART%/gi, chart).replace(/%BUTTONS%/gi, buttons);
 
 
         },
