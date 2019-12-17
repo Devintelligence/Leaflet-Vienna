@@ -1,0 +1,97 @@
+<html>
+   <body>
+      <form name="epost" method="post" enctype="multipart/form-data" id="epost" action="http://localhost:5000/uploader">
+         <span>Uplod elogistics File : </span><input type = "file" name="epost_file" id="epost_file"/>
+         <input type="submit" id="epost_submit" name="epost" value="Submit"/>
+      </form>
+      <br />
+      <hr />
+      <br />
+      <br />
+      <form name="haufgasse" method="post" enctype="multipart/form-data" id="haufgasse">
+         <span>Uplod haufgasse File : </span><input type="file" name="haufgasse_file" id="haufgasse_file"/>
+         <input type="hidden" id="haufgasse" name="haufgasse" value="haufgasse"/>
+         <input type="submit" id="haufgasse_submit" name="haufgasse" value="Submit"/>
+      </form>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script>
+$(document).ready(function () {
+
+    $("#epost_submit").click(function (event) {
+        event.preventDefault();
+        var form = $('#epost')[0];
+        var data = new FormData(form);
+        data.append("FormName", "epost");
+        $("#epost_submit").prop("disabled", true);
+        $("#haufgasse_submit").prop("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/uploader",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (data) {
+                console.log("SUCCESS : ", data);
+                alert(data);
+                $("#epost_file").val('');
+                $("#haufgasse_file").val('');
+                $("#epost_submit").prop("disabled", false);
+                $("#haufgasse_submit").prop("disabled", false);
+
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+                $("#epost_file").val('');
+                $("#haufgasse_file").val('');
+                $("#epost_submit").prop("disabled", false);
+                $("#haufgasse_submit").prop("disabled", false);
+
+            }
+        });
+
+    });
+
+    $("#haufgasse_submit").click(function (event) {
+        event.preventDefault();
+        var form = $('#haufgasse')[0];
+        var data = new FormData(form);
+        data.append("FormName", "haufgasse");
+        $("#epost_submit").prop("disabled", true);
+        $("#haufgasse_submit").prop("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/uploader",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (data) {
+                console.log("SUCCESS : ", data);
+                alert(data);
+                $("#epost_file").val('');
+                $("#haufgasse_file").val('');
+                $("#epost_submit").prop("disabled", false);
+                $("#haufgasse_submit").prop("disabled", false);
+
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+                $("#epost_file").val('');
+                $("#haufgasse_file").val('');
+                $("#epost_submit").prop("disabled", false);
+                $("#haufgasse_submit").prop("disabled", false);
+
+            }
+        });
+
+    });
+
+});
+      </script>
+   </body>
+</html>
