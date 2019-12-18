@@ -206,3 +206,12 @@
         color: #0078A8;
         border: 0;
     }
+    
+    .addRealTime.active,
+    .awgr.active {
+        font-weight: bold;
+    }
+    
+    .sub {
+        display: none;
+    }

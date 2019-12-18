@@ -14,6 +14,7 @@ var viennabuildings = L.icon({
     popupAnchor: [-3, -36] // point from which the popup should open relative to the iconAnchor
 });
 
+var fg = L.featureGroup();
 let ViennaData = function() {
     let basePath = "https://stp-test.wien.gv.at:4543";
     let _map = null;
@@ -55,40 +56,96 @@ let ViennaData = function() {
             _map = map;
             _data = data;
             self.getGrafanaCharts(settings);
-
+            fg.addTo(_map)
 
         },
 
         getGrafanaCharts: function(settings) {
-            var url = 'http://moft.apinf.io:8080/grafana/api/search?folderIds=0&query=&starred=false';
 
-            jQuery.ajaxPrefilter(function(options) {
-                if (options.crossDomain && jQuery.support.cors) {
-                    options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-                }
-            });
-            $.ajax({
-                url: url,
-                type: "GET",
-                dataType: "json",
-                success: function(result) {
-                    for (r in result) {
-                        if (_charts[result[r]["title"]] == undefined) {
-                            _charts[result[r]["title"]] = [];
+
+            if (settings.entity == "awgr") {
+
+
+                if (!settings.state) {
+                    self.removeGeoJsonMarkers(settings.data);
+                } else {
+
+                    $.ajax({
+                        url: "./" + settings.data + ".json",
+                        type: "GET",
+                        success: function(result) {
+
+
+                            L.geoJSON(result, {
+                                pointToLayer: function(feature, latlng) {
+                                    return L.marker(latlng, { icon: viennabuildings });
+                                },
+
+                                onEachFeature: function(feature, layer) {
+                                    let popupContent = "";
+
+                                    if (feature.properties && feature.properties) {
+
+                                        let tableRows = "<table id='' class='detailTable' width='100%' >";
+
+                                        for (var key in feature.properties) {
+
+                                            if (key != "location" && key != "id" && key != "type" && key != "ip" && key != "__sysid__" && key != "__style" && key != "__id") {
+                                                tableRows += "<tr><td>" + key + "</td><td>" + feature.properties[key] + "</td></tr>";
+                                            }
+
+                                        }
+                                        tableRows += "</table>";
+                                        popupContent += tableRows;
+                                    }
+                                    layer.tag = settings.data;
+                                    layer.bindPopup(popupContent);
+                                }
+                            }).addTo(_map);
+
+                            self.bestFitZoom();
                         }
+                    })
 
-                        result[r].url = result[r].url.replace("/d/", "/d-solo/");
-
-                        _charts[result[r]["title"]] = result[r];
-                    }
-                    console.log(_charts);
-                    self.getData(settings);
                 }
+            } else {
+                var url = 'http://moft.apinf.io:8080/grafana/api/search?folderIds=0&query=&starred=false';
 
-            });
+                jQuery.ajaxPrefilter(function(options) {
+                    if (options.crossDomain && jQuery.support.cors) {
+                        options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+                    }
+                });
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        for (r in result) {
+                            if (_charts[result[r]["title"]] == undefined) {
+                                _charts[result[r]["title"]] = [];
+                            }
+
+                            result[r].url = result[r].url.replace("/d/", "/d-solo/");
+
+                            _charts[result[r]["title"]] = result[r];
+                        }
+                        console.log(_charts);
+
+                    },
+                    complete: function() {
+                        self.getData(settings);
+                    }
+
+                });
+            }
         },
 
         getData: function(settings) {
+
+            self.clearMarker(settings.entity);
+
+
             var url = 'http://moft.apinf.io:8080/contextbroker/v2/entities/?limit=200';
             jQuery.ajaxPrefilter(function(options) {
                 if (options.crossDomain && jQuery.support.cors) {
@@ -137,7 +194,13 @@ let ViennaData = function() {
                         for (r in result) {
 
                             let item = result[r];
+
+
                             let splitted = item.id.split("_");
+                            if (item.id.indexOf(":") != -1) {
+                                splitted = item.id.split(":");
+                            }
+
                             if (buildings[splitted[0]] == undefined) {
                                 buildings[splitted[0]] = [];
                             }
@@ -153,13 +216,20 @@ let ViennaData = function() {
                                 let lat = item.location.value.coordinates[0];
                                 let lng = item.location.value.coordinates[1];
 
+                                if (b == "hauffgasse") {
+
+                                    lat = item.location.value.coordinates[1];
+                                    lng = item.location.value.coordinates[0];
+                                }
+
                                 let marker = L.marker([lat, lng], {
                                     icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
-                                }).addTo(_map).bindPopup(self.getTabbedContent(settings.entity, buildings[b], b), {
+                                }).addTo(fg).bindPopup(self.getTabbedContent(settings.entity, buildings[b], b), {
                                     maxWidth: 1000,
                                     minWidth: 1000
 
                                 });
+                                marker._id = settings.entity;
                                 marker.on('click', function(e) {
                                     if (window.location.hash) {
                                         window.location.hash;
@@ -171,8 +241,11 @@ let ViennaData = function() {
 
                             }
                         }
+                        /*    setTimeout(function() {
+                                _map.fitBounds(fg.getBounds());
+                            }, 300);*/
 
-                    } else {
+                    } else if (settings.entity == "rentalbike") {
 
 
 
@@ -193,11 +266,12 @@ let ViennaData = function() {
                                 }
                                 let marker = L.marker([lat, lng], {
                                     icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
-                                }).addTo(_map).bindPopup(self.getItemContent(settings.entity, item), {
+                                }).addTo(fg).bindPopup(self.getItemContent(settings.entity, item), {
                                     maxWidth: 560,
                                     minWidth: 550
 
                                 });
+                                marker._id = settings.entity;
                                 marker.on('click', function(e) {
                                     if (window.location.hash) {
                                         window.location.hash;
@@ -211,6 +285,10 @@ let ViennaData = function() {
                             }
 
                         }
+
+                        setTimeout(function() {
+                            _map.fitBounds(fg.getBounds());
+                        }, 300);
                     }
 
 
@@ -220,6 +298,69 @@ let ViennaData = function() {
 
                 }
             });
+
+        },
+
+        clearMarker: function(id, fg) {
+            console.log(fg)
+            var new_markers = []
+            _map.eachLayer(function(marker) {
+                for (l in marker.layers) {
+                    if (marker.layers[l]._id == id) map.removeLayer(marker)
+                }
+
+
+            })
+            markers = new_markers
+        },
+
+        onEachFeature: function(feature, layer) {
+            let popupContent = "";
+
+            if (feature.properties && feature.properties) {
+
+                let tableRows = "<table id='' class='detailTable' width='100%' >";
+
+                for (var key in feature.properties) {
+
+                    if (key != "location" && key != "id" && key != "type" && key != "ip" && key != "__sysid__" && key != "__style" && key != "__id") {
+                        tableRows += "<tr><td>" + key + "</td><td>" + feature.properties[key] + "</td></tr>";
+                    }
+
+                }
+                tableRows += "</table>";
+                popupContent += tableRows;
+            }
+            layer.tag = feature.properties.__id;
+            layer.bindPopup(popupContent);
+        },
+
+
+        removeGeoJsonMarkers: function(tag) {
+            _map.eachLayer(function(layer) {
+
+                if (layer.tag && layer.tag === tag) {
+                    _map.removeLayer(layer)
+                }
+
+            });
+
+        },
+        bestFitZoom: function() {
+            // declaring the group variable  
+            var group = new L.featureGroup;
+
+            // map._layers gives all the layers of the map including main container
+            // so looping in all those layers filtering those having feature   
+            $.each(_map._layers, function(ml) {
+
+                // here we can be more specific to feature for point, line etc.            
+                if (_map._layers[ml].feature) {
+                    group.addLayer(this)
+                }
+            })
+
+            _map.fitBounds(group.getBounds());
         },
         getHistoryData: function(id, entity, downloadType = "json") {
 
@@ -282,14 +423,14 @@ let ViennaData = function() {
 
             let tableRows = "";
 
-
+            links += '<option value="">Bitte wählen</option>';
             for (res in result) {
                 if (res != 0) {
                     let item = result[res];
 
-                    tableRows += "<table id='" + item.id + "' class='detailTable' width='100%' style='display:none'>";
+                    tableRows += "<table id='" + item.id.replace(":", "_") + "' class='detailTable' width='100%' style='display:none'>";
                     tableRows += "<tr><th colspan='" + (item.length - 2) + "'><h5>" + item.id + "</h5></th></tr>";
-                    links += '<option value="' + item.id + '">' + item.id + '</option>';
+                    links += '<option value="' + item.id.replace(":", "_") + '">' + item.id + '</option>';
 
                     for (var key in item) {
 

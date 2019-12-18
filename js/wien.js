@@ -21,7 +21,12 @@ $(document).ready(function() {
     // initRealtime("rentalbike");
     let param = findGetParameter("t");
     if (param != null) {
+
+        if (param == "awgr") {
+            $("#list_realtime").show();
+        }
         $("#" + param).trigger("click");
+
     }
 
 
@@ -46,9 +51,11 @@ function initLayerButton() {
         if ($(this).attr("id") == "show-layers") {
             $("#list").toggle();
             $("#list_realtime").hide();
+            $(".addRealTime").removeClass("active");
         } else {
             $("#list").hide();
             $("#list_realtime").toggle();
+
         }
 
     });
@@ -88,14 +95,35 @@ function initLayerAction() {
         }
     });
 
-    $("#list_realtime").off("click", ".addRealTime").on("click", ".addRealTime", function() {
+    $("#list_realtime").off("click", ".addRealTime").on("click", ".addRealTime", function(e) {
+        $(this).toggleClass("active");
+        if ($(this).attr("id") != "awgr") {
+
+            const settings = {
+                entity: $(this).attr("id")
+            }
+
+            new ViennaData().init(mymap, null, settings);
+        } else {
+
+            $(this).find(".sub").toggle();
+        }
+    });
 
 
+
+    $("#list_realtime").off("click", ".awgr").on("click", ".awgr", function(e) {
+
+        e.stopPropagation();
+        $(this).toggleClass("active");
         const settings = {
-            entity: $(this).attr("id")
+            entity: $(this).attr("class").replace("active", "").trim(),
+            data: $(this).attr("data-id"),
+            state: $(this).hasClass("active")
         }
 
         new ViennaData().init(mymap, null, settings);
+
 
     });
 
