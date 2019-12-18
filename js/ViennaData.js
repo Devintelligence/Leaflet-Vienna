@@ -109,13 +109,9 @@ let ViennaData = function() {
 
                 }
             } else {
-                var url = 'http://moft.apinf.io:8080/grafana/api/search?folderIds=0&query=&starred=false';
+                var url = './api/grafana/api/search?folderIds=0&query=&starred=false';
 
-                jQuery.ajaxPrefilter(function(options) {
-                    if (options.crossDomain && jQuery.support.cors) {
-                        options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-                    }
-                });
+
                 $.ajax({
                     url: url,
                     type: "GET",
@@ -146,12 +142,8 @@ let ViennaData = function() {
             self.clearMarker(settings.entity);
 
 
-            var url = 'http://moft.apinf.io:8080/contextbroker/v2/entities/?limit=200';
-            jQuery.ajaxPrefilter(function(options) {
-                if (options.crossDomain && jQuery.support.cors) {
-                    options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-                }
-            });
+            var url = './api/contextbroker/v2/entities/?limit=200';
+
             $.ajax({
                 url: url,
                 headers: { "fiware-service": settings.entity, "x-pvp-roles": "fiware(" + settings.entity + "=ql:r+cb:w)" },
@@ -414,7 +406,7 @@ let ViennaData = function() {
 
             if (_charts[type] != undefined) {
 
-                chart += '<iframe src="https://stp-test.wien.gv.at:4543' + _charts[type].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
+                chart += '<iframe src="' + _charts[type].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
 
             } else {
                 chart = "";
@@ -457,7 +449,7 @@ let ViennaData = function() {
             let content = "";
 
 
-            chart += '<iframe src="https://stp-test.wien.gv.at:4543' + _charts[item.id].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
+            chart += '<iframe src="' + _charts[item.id].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
 
 
             buttons = "";

@@ -25,14 +25,9 @@
     <script src="js/wien.js"></script>
 
     <script>
-        let basePath = "http://moft.apinf.io:8080/";
         $(document).ready(function() {
-            var url = basePath + 'grafana/api/search?folderIds=0&query=&starred=false';
-            jQuery.ajaxPrefilter(function(options) {
-                if (options.crossDomain && jQuery.support.cors) {
-                    options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-                }
-            });
+            var url = './api/grafana/api/search?query=&starred=false&type=dash-db';
+
 
 
             $.ajax({
@@ -43,7 +38,7 @@
                     for (r in result) {
 
 
-                        $("#stats").append(' <iframe src="https://stp-test.wien.gv.at:4543' + result[r].url.replace("/d/", "/d-solo/") + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>');
+                        $("#stats").append(' <iframe src="' + result[r].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>');
 
 
                     }
