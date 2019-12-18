@@ -1,0 +1,11 @@
+version: '2'
+services:
+  app:
+    image: trigynravishankar/profirator:epost
+    ports:
+      - '5000:5000'
+    volumes:
+      - /tmp:/mnt/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - orionUri=http://192.168.16.115:1026/
