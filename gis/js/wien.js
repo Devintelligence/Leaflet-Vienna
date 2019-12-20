@@ -18,7 +18,7 @@ $(document).ready(function() {
 
     initLayerButton();
 
-    // initRealtime("rentalbike");
+
     let param = findGetParameter("t");
     if (param != null) {
 
@@ -132,39 +132,6 @@ function initLayerAction() {
 
 
 
-function initRealtime(entity) {
-    var url = 'http://moft.apinf.io:8080/contextbroker/v2/entities/';
-    jQuery.ajaxPrefilter(function(options) {
-        if (options.crossDomain && jQuery.support.cors) {
-            options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
-        }
-    });
-    $.ajax({
-        url: url,
-        headers: { "fiware-service": entity, "x-pvp-roles": "fiware(" + entity + "=ql:r+cb:w)" },
-        type: "GET",
-        success: function(result) {
-
-
-            let link = "<a href='javascript:void(0);' class='download' data-type='entity' data-download-type='csv'>Download CSV</a> | <a href='javascript:void(0);' class='download' data-type='entity' data-download-type='json'>Download JSON</a>"
-                // for (r in result) {
-            marker = L.marker([48.154104, 16.441505], {
-                icon: train
-            }).addTo(mymap).bindPopup("<h3>" + result[0].id + "</h3>Temperatur:" + result[0].temperature.value + "<br>Fahrräder: " + result[0].boxAvailCnt.value + "<br>E-Bikes: " + result[0].ebikeCnt.value + "<hr>" + link, {
-                maxWidth: 560,
-                minWidth: 550
-
-            }).openPopup();
-            //   }
-
-            console.log(result)
-        },
-        error: function(result) {
-            console.log(result)
-        }
-    });
-}
-
 function loadBaseLayer() {
     L.Map = L.Map.extend({
             openPopup: function(popup) {
@@ -266,6 +233,10 @@ function addWFSLayer(LAYERID) {
             });
 
             mymap.addLayer(customMarkerLayer[LAYERID]);
+
+            setTimeout(function() {
+                mymap.fitBounds(customMarkerLayer[LAYERID].getBounds());
+            }, 300);
         }
     });
 }

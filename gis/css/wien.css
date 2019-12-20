@@ -50,12 +50,7 @@
     }
     
     #layers {
-        display: block;
-        position: absolute;
-        z-index: 900;
-        left: 114px;
-        top: 0;
-        color: white;
+        display: none;
     }
     
     #layers h2,
@@ -89,6 +84,7 @@
         position: absolute;
         right: 0;
         top: 50px;
+        z-index: 1;
     }
     
     #layer-link {
@@ -120,9 +116,11 @@
     .header-text {
         font-size: 20px;
         font-weight: bold;
-        position: fixed;
-        right: 50%;
+        position: absolute;
         top: 10px;
+        text-align: center;
+        display: block;
+        width: 100%;
     }
     
     .header-img {
@@ -214,4 +212,85 @@
     
     .sub {
         display: none;
+    }
+    
+    .mainContainer {
+        position: relative;
+    }
+    /* Animation */
+    
+    @keyframes open {
+        from {
+            right: -100vw;
+        }
+        to {
+            right: 10px;
+        }
+    }
+    
+    #burgerbutton {
+        display: none;
+    }
+    /* Im Produktiven Einsatz sollte der Text-Teil des Label-Elements vielleicht durch eine Hintergrund-Grafik ersetzt werden. */
+    
+    .burgerimage {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        font-size: 28pt;
+        cursor: pointer;
+        transition: transform 0.8s ease;
+        color: #000;
+    }
+    
+    nav {
+        display: block;
+        height: 50px;
+        border-bottom: 3px solid #000;
+        position: fixed;
+        top: 0;
+        right: 8px;
+        z-index: 100;
+    }
+    
+    nav ul {
+        display: none;
+        position: fixed;
+        top: 53px;
+        margin: 0;
+        padding: 0;
+        width: auto;
+        list-style: none;
+        z-index: 2;
+        right: 7px;
+    }
+    
+    nav ul li {
+        display: block;
+        width: auto;
+    }
+    
+    nav ul li a {
+        text-decoration: none;
+        color: red;
+        background-color: #fff;
+        border-bottom: 1px solid #000;
+        display: block;
+        padding: 20px;
+        transition: background 0.5s ease;
+    }
+    
+    nav ul li a:hover {
+        background-color: #fff;
+        color: darkred;
+    }
+    
+    #burgerbutton:checked~ul {
+        display: block;
+        animation-name: open;
+        animation-duration: 0.8s;
+    }
+    
+    #burgerbutton:checked~.burgerimage {
+        transform: rotate(360deg);
     }

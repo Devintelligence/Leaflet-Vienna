@@ -30,13 +30,7 @@
     <div class="header">
         <a href="./index.html"> <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg"></a>
         <span class="header-text">Smart City Wien</span>
-        <div id="layers">
-            <h2 style="float: left;margin-right: 10px;"><a href="analytics.html">Statistiken</a> | </h2>
-            <h2 style="float: left;margin-right: 10px;"><a href="#" class="layer-link" id="show-layers">Themen</a> | </h2>
-            <h2 style="float: left;margin-right: 10px;"><a href="#" class="layer-link" id="show-realtime">Echtzeit-Daten</a></h2>
 
-
-        </div>
         <div id="list">
             <input id="myInput" type="text" placeholder="Suche..">
         </div>
@@ -61,6 +55,17 @@
                 </li>
             </ul>
         </div>
+
+        <nav>
+            <input type="checkbox" id="burgerbutton" />
+            <label for="burgerbutton" class="burgerimage" title="Navigation">&#x2630;</label>
+            <ul id="layers">
+                <li><a href="analytics.html">Statistiken</a></li>
+                <li><a href="#" class="layer-link" id="show-layers">Themen</a></li>
+                <li><a href="#" class="layer-link" id="show-realtime">Echtzeit-Daten</a></li>
+
+            </ul>
+        </nav>
     </div>
 
 
