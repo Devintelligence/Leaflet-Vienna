@@ -21,7 +21,7 @@ var logistic = L.icon({
 
     popupAnchor: [-3, -36] // point from which the popup should open relative to the iconAnchor
 });
-
+let firstStart = true;
 var fg = L.featureGroup();
 let ViennaData = function() {
     let basePath = "https://stp-test.wien.gv.at:4543";
@@ -29,7 +29,7 @@ let ViennaData = function() {
     let _data = {};
     let _settings = {}
     let _historyData = [];
-    let firstStart = true;
+
     let _charts = [];
 
     let _basePopupContent = '<div style="min-width:600px">' +
@@ -147,7 +147,16 @@ let ViennaData = function() {
 
         getData: function(settings) {
 
-            self.clearMarker(settings.entity);
+
+
+
+
+            if (!$("#" + settings.entity).hasClass("active") && !firstStart) {
+                self.clearMarker(settings.entity);
+                firstStart = false;
+                return;
+            }
+            firstStart = false;
 
 
             var url = './api/contextbroker/v2/entities/?limit=200';
@@ -304,8 +313,8 @@ let ViennaData = function() {
             console.log(fg)
             var new_markers = []
             _map.eachLayer(function(marker) {
-                for (l in marker.layers) {
-                    if (marker.layers[l]._id == id) map.removeLayer(marker)
+                for (l in marker._layers) {
+                    if (marker._layers[l]._id == id) _map.removeLayer(marker)
                 }
 
 
