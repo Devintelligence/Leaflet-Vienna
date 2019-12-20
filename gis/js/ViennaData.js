@@ -231,11 +231,9 @@ let ViennaData = function() {
                                 });
                                 marker._id = settings.entity;
                                 marker.on('click', function(e) {
-                                    if (window.location.hash) {
-                                        window.location.hash;
-                                    } else {
-                                        window.location.hash = '#chart_undefined';
-                                    };
+
+                                    window.location.hash = '#chart_' + b;
+
                                 });
 
 
@@ -276,11 +274,9 @@ let ViennaData = function() {
                                 });
                                 marker._id = settings.entity;
                                 marker.on('click', function(e) {
-                                    if (window.location.hash) {
-                                        window.location.hash;
-                                    } else {
-                                        window.location.hash = '#chart';
-                                    };
+
+                                    window.location.hash = '#chart_' + item.id;
+
 
                                 });
 
@@ -447,8 +443,8 @@ let ViennaData = function() {
             }
 
             content += tableRows;
-            tabs += '<li><a href="#chart_' + entity.id + '" class="tabitem chartTab" id="">Statistik</a></li>';
-            content += "<div class='tab ' id='chart_" + entity.id + "'  ><div  class='tabContent' style='padding:5px;'>" + chart + "</div></div>";
+            tabs += '<li><a href="#chart_' + type + '" class="tabitem chartTab" id="">Statistik</a></li>';
+            content += "<div class='tab ' id='chart_" + type + "'  ><div  class='tabContent' style='padding:5px;'>" + chart + "</div></div>";
             return _tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%MORETABS%/gi, tabs).replace(/%TABCLASS%/gi, "buildings").replace(/%TABCONTENT%/gi, content);
         },
         getItemContent: function(entity, item) {
