@@ -14,6 +14,14 @@ var viennabuildings = L.icon({
     popupAnchor: [-3, -36] // point from which the popup should open relative to the iconAnchor
 });
 
+var logistic = L.icon({
+    iconUrl: 'images/logistic.png',
+
+    iconSize: [32, 37], // size of the icon
+
+    popupAnchor: [-3, -36] // point from which the popup should open relative to the iconAnchor
+});
+
 var fg = L.featureGroup();
 let ViennaData = function() {
     let basePath = "https://stp-test.wien.gv.at:4543";
@@ -179,7 +187,7 @@ let ViennaData = function() {
 
                         $("#chart_undefined").show();
                     });
-                    if (settings.entity == "vienna_buildings") {
+                    if (settings.entity == "vienna_buildings" || settings.entity == "elogistics") {
 
 
                         let buildings = [];
@@ -215,7 +223,7 @@ let ViennaData = function() {
                                 }
 
                                 let marker = L.marker([lat, lng], {
-                                    icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
+                                    icon: (settings.entity == "elogistics") ? logistic : viennabuildings
                                 }).addTo(fg).bindPopup(self.getTabbedContent(settings.entity, buildings[b], b), {
                                     maxWidth: 1000,
                                     minWidth: 1000
@@ -233,9 +241,12 @@ let ViennaData = function() {
 
                             }
                         }
-                        /*    setTimeout(function() {
+                        if (settings.entity == "elogistics") {
+                            setTimeout(function() {
                                 _map.fitBounds(fg.getBounds());
-                            }, 300);*/
+                            }, 300);
+
+                        }
 
                     } else if (settings.entity == "rentalbike") {
 
