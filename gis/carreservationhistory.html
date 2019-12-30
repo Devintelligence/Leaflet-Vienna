@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SmartCity Wien</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/wien.css" />
+
+    <script src="js/fullcalender/jquery.min.js"></script>
+
+    <link href='css/fullcalender/core/main.css' rel='stylesheet' />
+    <link href='css/fullcalender/daygrid/main.css' rel='stylesheet' />
+    <link href='css/fullcalender/timegrid/main.css' rel='stylesheet' />
+    <script src='js/fullcalender/core/main.js'></script>
+    <script src='js/fullcalender/interaction/main.js'></script>
+    <script src='js/fullcalender/daygrid/main.js'></script>
+    <script src='js/fullcalender/timegrid/main.js'></script>
+    <script src='js/carreservationhistory.js'></script>
+    
+</head>
+<body class="main">
+    <header>
+        <a href="./index.html"> <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg" style="position: absolute;z-index: 2;"></a>
+        <span class="header-text">Smart City Wien</span>
+        <br>
+        <br>
+    </header>
+    <main role="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Select Vehicle : </label>
+                    <select id="vehicleId">
+                        <option value="0">Vehicle Id</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                    <div id='calendar'></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-text">powered by FIWARE</div>
+        </div>
+    </main>
+</body>
+</html>
