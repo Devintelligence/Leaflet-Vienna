@@ -2,7 +2,7 @@ $(document).ready(function(){
     function getCarData() {
         return $.ajax({
             type: 'GET',
-            url: "/gis/api/contextbroker/v2/entities",
+            url: "./api/contextbroker/v2/entities",
             headers: {"fiware-service":"carusoreservationhistory"},
             cache: false
         });
