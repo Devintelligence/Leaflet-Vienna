@@ -32,7 +32,7 @@ let ViennaData = function() {
 
     let _charts = [];
 
-    let _basePopupContent = '<div style="min-width:600px">' +
+    let _basePopupContent = '<div style="min-width:672px">' +
         '<div class="col-xs-12">' +
         '<h3>%HEADLINE%</h3>' +
         '<div id="tabs">' +
@@ -126,15 +126,24 @@ let ViennaData = function() {
                     dataType: "json",
                     success: function(result) {
                         for (r in result) {
+                            let title = result[r]["title"].split(":");
+
+                            if (_charts[title[0]] == undefined) {
+
+                                _charts[title[0]] = [];
+                            }
+
+                            result[r].url = result[r].url.replace("/d/", "/d-solo/");
+
                             if (_charts[result[r]["title"]] == undefined) {
+
                                 _charts[result[r]["title"]] = [];
                             }
 
                             result[r].url = result[r].url.replace("/d/", "/d-solo/");
 
                             _charts[result[r]["title"]] = result[r];
-                        }
-                        console.log(_charts);
+                        };
 
                     },
                     complete: function() {
@@ -185,16 +194,26 @@ let ViennaData = function() {
 
                         $("#" + $(this).val()).show();
 
-                        $("#chart_undefined").hide();
+                        $('[id^=chart]').hide();
+
+
                     });
 
 
                     $(document).off("click", ".chartTab").on("click", ".chartTab", function() {
 
-                        $(".detailTable").hide();
+                        $('[id^=table]').hide();
 
+                        $('[id^=chart]').show();
 
-                        $("#chart_undefined").show();
+                    });
+
+                    $(document).off("click", ".tableTab").on("click", ".tableTab", function() {
+
+                        $('[id^=table]').show();
+
+                        $('[id^=chart]').hide();
+
                     });
                     if (settings.entity == "vienna_buildings" || settings.entity == "elogistics") {
 
@@ -420,6 +439,8 @@ let ViennaData = function() {
             let chart = "<h6>Um die historischen Daten herunter zuladen, wechseln Sie bitte zu den Statistiken</h6>";
 
 
+
+
             if (_charts[type] != undefined) {
 
                 chart += '<iframe src="' + _charts[type].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
@@ -453,7 +474,7 @@ let ViennaData = function() {
 
             content += tableRows;
             tabs += '<li><a href="#chart_' + type + '" class="tabitem chartTab" id="">Statistik</a></li>';
-            content += "<div class='tab ' id='chart_" + type + "'  ><div  class='tabContent' style='padding:5px;'>" + chart + "</div></div>";
+            content += "<div class='tab  ' id='chart_" + type + "'  ><div  class='tabContent' style='padding:5px;'>" + chart + "</div></div>";
             return _tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%MORETABS%/gi, tabs).replace(/%TABCLASS%/gi, "buildings").replace(/%TABCONTENT%/gi, content);
         },
         getItemContent: function(entity, item) {
@@ -482,7 +503,7 @@ let ViennaData = function() {
             links += '<li><a href="#chart_' + item.id + '" class="tabitem chartTab" id="">Statistik</a></li>';
             content += "<div class='tab ' id='chart_" + item.id + "'  ><div  class='tabContent' >" + chart + "</div></div>";
 
-            links += '<li><a href="#table_' + item.id + '" class="tabitem">Information</a></li>';
+            links += '<li><a href="#table_' + item.id + '" class="tabitem tableTab">Information</a></li>';
             content += "<div class='tab ' id='table_" + item.id + "'><div  class='tabContent'  >" + tableRows + "</div></div>";
 
 

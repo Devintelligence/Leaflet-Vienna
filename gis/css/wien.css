@@ -747,7 +747,7 @@ li.selected-layer a {
 }
 
 .leaflet-popup-content {
-    width: 600px!important;
+    width: 650px!important;
 }
 
 #tabs {
@@ -813,6 +813,7 @@ li.selected-layer a {
     bottom: 0;
     padding: 20px;
     border: 1px solid #ccc;
+    max-width: 96.5%;
 }
 
 .tab:target {
