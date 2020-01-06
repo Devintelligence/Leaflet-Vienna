@@ -3,7 +3,7 @@ var rentalbike = L.icon({
 
     iconSize: [32, 37], // size of the icon
 
-    popupAnchor: [-3, -36] // point from which the popup should open relative to the iconAnchor
+    popupAnchor: [-3, -36] // point from which the popup shouldh open relative to the iconAnchor
 });
 
 var viennabuildings = L.icon({
@@ -141,6 +141,7 @@ let ViennaData = function() {
                             }
 
                             result[r].url = result[r].url.replace("/d/", "/d-solo/");
+                            _charts[title[0]] = result[r];
 
                             _charts[result[r]["title"]] = result[r];
                         };
