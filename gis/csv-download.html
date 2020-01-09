@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SmartCity Wien</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/wien.css" />
+
+    <script src="js/jquery.min.js"></script>
+    <script src='js/csv-download.js'></script>
+    
+</head>
+<body class="main">
+    <header>
+        <a href="./index.html"> <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg" style="position: absolute;z-index: 2;"></a>
+        <span class="header-text">Smart City Wien</span>
+        <br>
+        <br>
+        <hr>
+    </header>
+    <main role="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label for="dataModel" >Data Model:*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" id="dataModel" placeholder="Data Model" title="Data Model">
+                                    <option value="0">Select Data Model</option>
+                                    <option value="rentalbike">rentalbike</option>
+                                    <option value="carusoreservationhistory">carusoreservationhistory</option>
+                                    <option value="vienna_buildings">vienna_buildings</option>
+                                    <option value="elogistics">elogistics</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label for="exampleFormControlSelect1" >Date Range:*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" id="dateRange" placeholder="Data Model" title="Data Model">
+                                    <option value="0">Select Date Range</option>
+                                    <option value="Today">Today</option>
+                                    <option value="Yesterday">Yesterday</option>
+                                    <option value="Last Week">Last Week</option>
+                                    <option value="Last Month">Last Month</option>
+                                    <option value="Last Seven Days">Last Seven Days</option>
+                                    <option value="Last Thirty Day">Last Thirty Day</option>
+                                    <option value="custom">Custom
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" id="dateDiv" style="display:none;">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label for="startDate" >Start Date:*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="date" id="startDate">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="endDate" >End Date:*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="date" id="endDate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" id="dataHtml" style="display:none;">
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>DataPoints</h5>
+                            <button class="btn btn-info btn-sm" id="dataPointsBtn" onclick="javascript:selectDataPoints()">Select/Unselect All</button>
+                            <div id='dataPointsDiv' style="margin-top: 10px" class="row"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Devices</h5>
+                            <button class="btn btn-info btn-sm" id="devicesBtn" onclick="javascript:selectDevices()">Select/Unselect All</button>
+                            <div id='devicesDiv' style="margin-top: 10px" class="row"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-info" style="float:right;" onclick="javascript:downloadData()">Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="footer">
+            <div class="footer-text">powered by FIWARE</div>
+        </div>
+    </main>
+</body>
+</html>
