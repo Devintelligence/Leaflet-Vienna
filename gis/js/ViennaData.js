@@ -203,6 +203,7 @@ let ViennaData = function() {
 
                     $(document).off("click", ".chartTab").on("click", ".chartTab", function() {
 
+                        $(".detailTable").hide();
                         $('[id^=table]').hide();
 
                         $('[id^=chart]').show();
