@@ -331,8 +331,10 @@ let ViennaData = function() {
         },
 
         clearMarker: function(id, fg) {
+            console.log(id)
             console.log(fg)
             var new_markers = []
+            $(".leaflet-marker-icon").remove();
             _map.eachLayer(function(marker) {
                 for (l in marker._layers) {
                     if (marker._layers[l]._id == id) _map.removeLayer(marker)
@@ -438,7 +440,7 @@ let ViennaData = function() {
             let content = '';
             let tabs = '';
 
-            let chart = "<h6>Um die historischen Daten herunter zuladen, wechseln Sie bitte zu den Statistiken</h6>";
+            let chart = "";
 
 
 
@@ -483,7 +485,7 @@ let ViennaData = function() {
 
 
             let tableRows = "<table>";
-            let chart = "<h6>Um die historischen Daten herunter zuladen, wechseln Sie bitte zu den Statistiken</h6>";
+            let chart = "";
             let links = "";
             let content = "";
 

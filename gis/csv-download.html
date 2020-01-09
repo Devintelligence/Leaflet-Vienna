@@ -16,15 +16,26 @@
 
     <script src="js/jquery.min.js"></script>
     <script src='js/csv-download.js'></script>
-    
+
 </head>
+
 <body class="main">
     <header>
-        <a href="./index.html"> <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg" style="position: absolute;z-index: 2;"></a>
+        <a href="./index.html"> <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg"></a>
         <span class="header-text">Smart City Wien</span>
         <br>
         <br>
-        <hr>
+        <nav>
+            <input type="checkbox" id="burgerbutton" />
+            <label for="burgerbutton" class="burgerimage" title="Navigation">&#x2630;</label>
+            <ul id="layers">
+                <li><a href="analytics.html">Statistiken</a></li>
+                <li><a href="map.html?t=list" class="layer-link" id="show-layers">Themen</a></li>
+                <li><a href="map.html?t=realtime" class="layer-link" id="show-realtime">Echtzeit-Daten</a></li>
+                <li><a href="csv-download.html">CSV-Download</a></li>
+
+            </ul>
+        </nav>
     </header>
     <main role="main">
         <div class="container">
@@ -33,7 +44,7 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-2">
-                                <label for="dataModel" >Data Model:*</label>
+                                <label for="dataModel">Data Model:*</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="form-control" id="dataModel" placeholder="Data Model" title="Data Model">
@@ -51,7 +62,7 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-2">
-                                <label for="exampleFormControlSelect1" >Date Range:*</label>
+                                <label for="exampleFormControlSelect1">Date Range:*</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="form-control" id="dateRange" placeholder="Data Model" title="Data Model">
@@ -72,13 +83,13 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-2">
-                                <label for="startDate" >Start Date:*</label>
+                                <label for="startDate">Start Date:*</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" id="startDate">
                             </div>
                             <div class="col-md-2">
-                                <label for="endDate" >End Date:*</label>
+                                <label for="endDate">End Date:*</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" id="endDate">
@@ -118,4 +129,5 @@
         </div>
     </main>
 </body>
+
 </html>
