@@ -259,10 +259,11 @@ let ViennaData = function() {
                                     minWidth: 1000
 
                                 });
-                                marker._id = settings.entity;
+                                marker._id = b;
+
                                 marker.on('click', function(e) {
 
-                                    window.location.hash = '#chart_' + b;
+                                    window.location.hash = '#chart_' + e.target._id;
 
                                 });
 
@@ -331,8 +332,7 @@ let ViennaData = function() {
         },
 
         clearMarker: function(id, fg) {
-            console.log(id)
-            console.log(fg)
+
             var new_markers = []
             $(".leaflet-marker-icon").remove();
             _map.eachLayer(function(marker) {
