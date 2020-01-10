@@ -22,9 +22,16 @@ $(document).ready(function() {
     let param = findGetParameter("t");
     if (param != null) {
 
-        if (param == "awgr") {
+        if (param == "awgr" || param == "realtime") {
             $("#list_realtime").show();
         }
+
+        if (param == "list") {
+            $("#list").show();
+        }
+
+
+
         $("#" + param).trigger("click");
 
     }
@@ -47,7 +54,12 @@ function findGetParameter(parameterName) {
 }
 
 function initLayerButton() {
+
+
+
     $(".layer-link").click(function() {
+
+        console.log(location);
         if ($(this).attr("id") == "show-layers") {
             $("#list").toggle();
             $("#list_realtime").hide();
