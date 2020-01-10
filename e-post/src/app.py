@@ -82,7 +82,7 @@ def process_epost(filename):
     orionUri = os.getenv('orionUri', 'http://0.0.0.0:1026/') + 'v2/entities'
     headers = {
         "Content-Type": "application/json", 'Accept': 'application/json',
-        "fiware-service": "elogistics"
+        "fiware-service": "elogistik"
     }
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     with open(file_path) as f:
@@ -93,15 +93,15 @@ def process_epost(filename):
             if i == 0:
                 continue
 
-            row_id = row[1] + ":" + row[2]
-            row_type = "elogistics"
+            row_id = row[1]
+            row_type = "elogistik"
             orion_data = {
                 "datamodel": {'type': 'Text', 'value': row[0]},
                 "deviceid": {'type': 'Text', 'value': row[1]},
                 "datapoint": {'type': 'Text', 'value': row[2]},
                 "dateobservered": {'type': 'DateTime', 'value': row[3][:19]},
                 "value": {'type': 'Number', 'value': int(row[4]) if str(row[4]).isdigit() else -1},
-                "location": {'type': 'geo:json', 'value': {'type': 'Point', 'coordinates': [float(row[5]), float(row[6])]}}
+                "location": {'type': 'geo:json', 'value': {'type': 'Point', 'coordinates': [float(row[6]), float(row[5])]}}
             }
 
             try:

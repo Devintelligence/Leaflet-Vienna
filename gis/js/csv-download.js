@@ -144,10 +144,10 @@ function downloadData() {
     		startDate = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
     		endDate = now;
     	}
-    	startDate = ("0" + startDate.getDate()).slice(-2) + '-' + ("0" + (startDate.getMonth() + 1)).slice(-2) + '-' + startDate.getFullYear();
+    	startDate = startDate.getFullYear() + '-' + ("0" + (startDate.getMonth() + 1)).slice(-2) + '-' + ("0" + startDate.getDate()).slice(-2);
     	var data = { 'fromDate': startDate };
     	if(endDate){
-			endDate = ("0" + endDate.getDate()).slice(-2) + '-' + ("0" + (endDate.getMonth() + 1)).slice(-2) + '-' + endDate.getFullYear();
+			endDate = endDate.getFullYear() + '-' + ("0" + (endDate.getMonth() + 1)).slice(-2) + '-' + ("0" + endDate.getDate()).slice(-2);
 			data['toDate'] = endDate
 		}
 	}
@@ -194,7 +194,13 @@ function downloadCsv(resultdata, entityID, dataPoints, dataModel) {
     var dataStr = 'Data Model, Device Id, Date,';
     for (var val = 0; val < attributes.length; val++) {
     	if($.inArray(attributes[val]['attrName'], dataPoints) != -1){
-        	dataStr += attributes[val]['attrName'] + ','
+    		if(attributes[val]['attrName'] == 'location'){
+    			dataStr += 'longitude,latitude,'
+    		}
+    		else{
+    			dataStr += attributes[val]['attrName'] + ','
+    		}
+        	
         }
     }
     dataStr += '\n'
@@ -202,11 +208,21 @@ function downloadCsv(resultdata, entityID, dataPoints, dataModel) {
         dataStr += dataModel + ',' + entityID + ',' + dateTime[data] + ','
         for (var val = 0; val < attributes.length; val++) {
         	if($.inArray(attributes[val]['attrName'], dataPoints) != -1){
-        		if(attributes[val]['attrName'] == 'location' && attributes[val]['values'][data].hasOwnProperty("coordinates")){
-        			dataStr += attributes[val]['values'][data]['coordinates'][1] + ' '+attributes[val]['values'][data]['coordinates'][0] + ','
+        		if(attributes[val]['attrName'] == 'location'){
+        			if(attributes[val]['values'][data].hasOwnProperty("coordinates")){
+        				dataStr += attributes[val]['values'][data]['coordinates'][1] + ','+attributes[val]['values'][data]['coordinates'][0] + ','
+        			}
+        			else{
+        				dataStr += ' , ,'
+        			}
         		}
         		else{
-        			dataStr += attributes[val]['values'][data] + ','
+        			if(dataModel == 'elogistik' && attributes[val]['attrName'] == 'value' && attributes[val]['values'][data] == '-1'){
+        				dataStr +=  'null,'
+        			}
+        			else{
+        				dataStr += attributes[val]['values'][data] + ','
+        			}
         		}
             }
         }
