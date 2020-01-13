@@ -203,6 +203,7 @@ function downloadCsv(resultdata, entityID, dataPoints, dataModel) {
         	
         }
     }
+    dataStr = dataStr.substring(0, dataStr.length-1)
     dataStr += '\n'
     for (var data = 0; data < dateTime.length; data++) {
         dataStr += dataModel + ',' + entityID + ',' + dateTime[data] + ','
@@ -210,7 +211,7 @@ function downloadCsv(resultdata, entityID, dataPoints, dataModel) {
         	if($.inArray(attributes[val]['attrName'], dataPoints) != -1){
         		if(attributes[val]['attrName'] == 'location'){
         			if(attributes[val]['values'][data].hasOwnProperty("coordinates")){
-        				dataStr += attributes[val]['values'][data]['coordinates'][1] + ','+attributes[val]['values'][data]['coordinates'][0] + ','
+        				dataStr += attributes[val]['values'][data]['coordinates'][0] + ','+attributes[val]['values'][data]['coordinates'][1] + ','
         			}
         			else{
         				dataStr += ' , ,'
@@ -226,6 +227,7 @@ function downloadCsv(resultdata, entityID, dataPoints, dataModel) {
         		}
             }
         }
+        dataStr = dataStr.substring(0, dataStr.length-1)
         dataStr += '\n'
     }
     dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(dataStr);
