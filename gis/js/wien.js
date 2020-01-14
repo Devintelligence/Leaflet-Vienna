@@ -6,6 +6,8 @@ let store = localforage.createInstance({
     name: 'vienna'
 });
 
+if (!window.location.pathname.endsWith("/") && !window.location.pathname.endsWith(".html")) { window.location = window.location + "/"; }
+
 $(document).ready(function() {
 
     initSearchField();
