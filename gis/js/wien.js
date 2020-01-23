@@ -61,6 +61,7 @@ function initLayerButton() {
 
     $(".layer-link").click(function() {
 
+        $("#layers").hide();
         console.log(location);
         if ($(this).attr("id") == "show-layers") {
             $("#list").toggle();
@@ -78,6 +79,7 @@ function initLayerButton() {
 function initLayerAction() {
 
     $("#list").off("click", ".addLayer").on("click", ".addLayer", function() {
+        $("#layers").hide();
 
         let LAYERID = $(this).attr("id");
         if (customLayer[LAYERID]) {
@@ -111,8 +113,10 @@ function initLayerAction() {
 
     $("#list_realtime").off("click", ".addRealTime").on("click", ".addRealTime", function(e) {
         $(this).toggleClass("active");
-        if ($(this).attr("id") != "awgr") {
 
+
+        if ($(this).attr("id") != "awgr") {
+            $("#list_realtime").hide();
             const settings = {
                 entity: $(this).attr("id")
             }

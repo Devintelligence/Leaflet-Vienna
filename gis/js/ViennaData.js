@@ -32,7 +32,7 @@ let ViennaData = function() {
 
     let _charts = [];
 
-    let _basePopupContent = '<div style="min-width:672px">' +
+    let _basePopupContent = '<div class="basePop">' +
         '<div class="col-xs-12">' +
         '<h3>%HEADLINE%</h3>' +
         '<div id="tabs">' +
@@ -170,7 +170,9 @@ let ViennaData = function() {
 
 
             var url = './api/contextbroker/v2/entities/?limit=200';
-
+            $(".leaflet-marker").remove();
+            $(".leaflet-marker-icon").remove();
+            $(".leaflet-popup").remove();
             $.ajax({
                 url: url,
                 headers: { "fiware-service": settings.entity, "x-pvp-roles": "fiware(" + settings.entity + "=ql:r+cb:w)" },
