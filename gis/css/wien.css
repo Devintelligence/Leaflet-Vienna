@@ -1027,4 +1027,18 @@ iframe {
     .leaflet-popup-content {
         width: 336px!important;
     }
+    #list,
+    #list_realtime {
+        left: 68px;
+    }
+    #tabs ul li {
+        position: relative;
+        width: 49.5%;
+    }
+    .leaflet-popup-content-wrapper {
+        padding-top: 20px;
+    }
+    .leaflet-pane.leaflet-popup-pane {
+        z-index: 1001;
+    }
 }
