@@ -1033,12 +1033,17 @@ iframe {
     }
     #tabs ul li {
         position: relative;
-        width: 49.5%;
+        width: 37.5%;
     }
     .leaflet-popup-content-wrapper {
         padding-top: 20px;
     }
     .leaflet-pane.leaflet-popup-pane {
         z-index: 1001;
+    }
+    .leaflet-container a.leaflet-popup-close-button {
+        left: 92%;
+        top: 10px;
+        font-size: 20px;
     }
 }
