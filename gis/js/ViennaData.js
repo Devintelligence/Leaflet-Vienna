@@ -245,8 +245,11 @@ let ViennaData = function() {
 
                         for (b in buildings) {
                             let item = buildings[b][0];
-                            if (item.location != undefined) {
+                            if (item.location != undefined && item.location.value.coordinates[0] != 0) {
 
+                                console.log(item);
+                                console.log(item.location.value);
+                                console.log(b);
 
                                 let lat = item.location.value.coordinates[0];
                                 let lng = item.location.value.coordinates[1];
@@ -275,12 +278,12 @@ let ViennaData = function() {
 
                             }
                         }
-                        if (settings.entity == "elogistics") {
-                            setTimeout(function() {
-                                _map.fitBounds(fg.getBounds());
-                            }, 300);
+                        //  if (settings.entity == "elogistics") {
+                        setTimeout(function() {
+                            _map.fitBounds(fg.getBounds());
+                        }, 300);
 
-                        }
+                        //   }
 
                     } else if (settings.entity == "rentalbike") {
 
