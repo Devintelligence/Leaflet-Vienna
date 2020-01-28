@@ -32,8 +32,7 @@ while True:
 		response = requests.get( uri, headers={'Authorization': 'token {}'.format(token)}, verify=False)
 		results = response.json()['results']
 		data_type = 'ReservationHistory'
-		#headers = {"fiware-service": "carusoReservationHistory", "Content-Type": "application/json", 'Accept': 'application/json'}
-		headers = {"Content-Type": "application/json", 'Accept': 'application/json'}
+		headers = {"fiware-service": "carusoReservationHistory", "Content-Type": "application/json", 'Accept': 'application/json'}
 		for res in results:
 			data = {'id': str(data_type) + ':' + str(res['vehicle_id']), 'type': data_type}
 			data['reservation_start'] = {'type': 'DateTime', 'value': parser.parse(res['reservation_start']).strftime('%Y-%m-%dT%H:%M:%S')}
