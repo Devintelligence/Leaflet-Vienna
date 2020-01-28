@@ -28,14 +28,14 @@ while True:
 		config.read('/carusoreservationhistory.ini')
 		uri = config['carusoreservationhistory']['url']
 		token = config['carusoreservationhistory']['token']
-		uri += '?state=closed&modified_gte=' + modified_gte + '&modified_lte=' + modified_lte 
+		uri += '?modified_gte=' + modified_gte + '&modified_lte=' + modified_lte 
 		print(uri)
 		response = requests.get( uri, headers={'Authorization': 'token {}'.format(token)}, verify=False)
 		results = response.json()['results']
 		data_type = 'ReservationHistory'
 		headers = {"fiware-service": "carusoReservationHistory", "Content-Type": "application/json", 'Accept': 'application/json'}
 		for res in results:
-			data = {'id': str(data_type) + ':' + str(res['user_id']), 'type': data_type}
+			data = {'id': str(data_type) + ':' + str(res['vehicle_id']), 'type': data_type}
 			data['reservation_start'] = {'type': 'DateTime', 'value': parser.parse(res['reservation_start']).strftime('%Y-%m-%dT%H:%M:%S')}
 			data['reservation_end'] = {'type': 'DateTime', 'value': parser.parse(res['reservation_end']).strftime('%Y-%m-%dT%H:%M:%S')}
 			data['state'] = {'type': 'Text', 'value': str(res['state'])}
