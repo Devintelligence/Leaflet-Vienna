@@ -19,8 +19,7 @@ while True:
 	try:
 		today = datetime.datetime.now()
 		start_time = today.strftime('%Y-%m-%dT%H:%M:%S')
-		modified_gte = (today - timedelta(hours = 25)).strftime('%Y-%m-%dT%H:%M:%S')
-		modified_lte = (today - timedelta(hours = 24)).strftime('%Y-%m-%dT%H:%M:%S')
+		modified_gte = (today - timedelta(hours = 25)).strftime('%Y-%m-%dT%H:%MZ')
 		print("Program starts running at ", start_time)
 		orionUri = os.getenv('orionUri', 'http://0.0.0.0:1026/') + 'v2/entities'
 		print('Orion Uri: ', orionUri)
@@ -28,14 +27,14 @@ while True:
 		config.read('/carusoreservationhistory.ini')
 		uri = config['carusoreservationhistory']['url']
 		token = config['carusoreservationhistory']['token']
-		uri += '?state=closed&modified_gte=' + modified_gte + '&modified_lte=' + modified_lte 
+		uri += '?modified__gte=' + modified_gte
 		print(uri)
 		response = requests.get( uri, headers={'Authorization': 'token {}'.format(token)}, verify=False)
 		results = response.json()['results']
 		data_type = 'ReservationHistory'
 		headers = {"fiware-service": "carusoReservationHistory", "Content-Type": "application/json", 'Accept': 'application/json'}
 		for res in results:
-			data = {'id': str(data_type) + ':' + str(res['user_id']), 'type': data_type}
+			data = {'id': str(data_type) + ':' + str(res['vehicle_id']), 'type': data_type}
 			data['reservation_start'] = {'type': 'DateTime', 'value': parser.parse(res['reservation_start']).strftime('%Y-%m-%dT%H:%M:%S')}
 			data['reservation_end'] = {'type': 'DateTime', 'value': parser.parse(res['reservation_end']).strftime('%Y-%m-%dT%H:%M:%S')}
 			data['state'] = {'type': 'Text', 'value': str(res['state'])}

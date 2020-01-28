@@ -22,6 +22,7 @@ $(document).ready(function() {
                 center: 'title',
                 right: 'dayGridMonth,dayGridWeek,dayGridDay'
             },
+
             // defaultView: 'listYear',
             events: entities,
         });
@@ -38,32 +39,55 @@ $(document).ready(function() {
             var val = data[_i].vehicle_id.value
             if (jQuery.inArray(val, _unique) == -1) {
                 _unique.push(val);
-                html += '<option value="' + val + '">' + val + '</option>'
+                html += '<option value="ReservationHistory:' + val + '">' + val + '</option>'
             }
         };
         $("#vehicleId").html(html)
     });
 
     $("#vehicleId").change(function() {
-        var value = $(this).val()
-        var request = getCarData();
-        request.done(function(data) {
-            vehical_entities = []
-            for (var _i = 0; _i < data.length; _i++) {
-                if (data[_i].vehicle_id.value == parseInt(value)) {
-                    vehical_entities.push({
-                        'title': ''.concat("\nFahrzeug ID: ", data[_i].vehicle_id.value,
-                            "\nEntfernung: ", data[_i].distance.value,
-                            "\nNutzungsstart: ", data[_i].batterylevel_at_start.value,
-                            "\nNutzungsende: ", data[_i].batterylevel_at_end.value,
-                        ),
-                        'start': data[_i].reservation_start.value,
+        var value = $(this).val();
+        if(value == '0'){
+            renderCalendar(entities);
+            return false;
+        }
+        var url = './api/quantumleap/v2/entities/' + value
+        $.ajax({
+            url: url,
+            headers: { "fiware-service": 'carusoreservationhistory', "fiware-servicepath": "/" },
+            type: "GET", 
+            success: function (resultdata) {
+                var attributes = resultdata['attributes'];
+                var vechile_data = {};
+                for (var data = 0; data < attributes.length; data++) {
+                    vechile_data[attributes[data]['attrName']] = attributes[data]['values']
+                }
+
+                var vehicle_entities = []
+                for (var data = 0; data < attributes[0]['values'].length; data++) {
+                    var color = 'red';
+                    if (vechile_data.state[data] == 'opened'){
+                        color = 'green';
+                    }
+                    else if (vechile_data.state[data] == 'protected'){
+                        color = 'orange';
+                    }
+                    vehicle_entities.push({
+                        'title': ''.concat("\nFahrzeug ID: ", vechile_data.vehicle_id[data],
+                                           "\nEntfernung: ", vechile_data.distance[data],
+                                           "\nNutzungsstart: ", vechile_data.batterylevel_at_start[data],
+                                           "\nNutzungsende: ", vechile_data.batterylevel_at_end[data],
+                                           ),
+                        'start': vechile_data.reservation_start[data],
+                        'backgroundColor': color,
                     });
                 }
-            }
-            renderCalendar(vehical_entities);
-        });
-
+                renderCalendar(vehicle_entities);
+            },
+            error: function (result) {
+              alert('Error:' + result)
+            }   
+        }); 
     });
     renderCalendar(entities);
 });
