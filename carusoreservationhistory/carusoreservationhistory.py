@@ -20,7 +20,6 @@ while True:
 		today = datetime.datetime.now()
 		start_time = today.strftime('%Y-%m-%dT%H:%M:%S')
 		modified_gte = (today - timedelta(hours = 25)).strftime('%Y-%m-%dT%H:%M:%S')
-		modified_lte = (today - timedelta(hours = 24)).strftime('%Y-%m-%dT%H:%M:%S')
 		print("Program starts running at ", start_time)
 		orionUri = os.getenv('orionUri', 'http://0.0.0.0:1026/') + 'v2/entities'
 		print('Orion Uri: ', orionUri)
@@ -28,7 +27,7 @@ while True:
 		config.read('/carusoreservationhistory.ini')
 		uri = config['carusoreservationhistory']['url']
 		token = config['carusoreservationhistory']['token']
-		uri += '?modified_gte=' + modified_gte + '&modified_lte=' + modified_lte 
+		uri += '?modified_gte=' + modified_gte
 		print(uri)
 		response = requests.get( uri, headers={'Authorization': 'token {}'.format(token)}, verify=False)
 		results = response.json()['results']
