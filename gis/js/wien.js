@@ -6,6 +6,8 @@ let store = localforage.createInstance({
     name: 'vienna'
 });
 
+if (!window.location.pathname.endsWith("/") && !window.location.pathname.endsWith(".html")) { window.location = window.location + "/"; }
+
 $(document).ready(function() {
 
     initSearchField();
@@ -59,7 +61,7 @@ function initLayerButton() {
 
     $(".layer-link").click(function() {
 
-        console.log(location);
+        $("#burgerbutton").trigger("click");
         if ($(this).attr("id") == "show-layers") {
             $("#list").toggle();
             $("#list_realtime").hide();
@@ -76,6 +78,7 @@ function initLayerButton() {
 function initLayerAction() {
 
     $("#list").off("click", ".addLayer").on("click", ".addLayer", function() {
+        $("#list").hide();
 
         let LAYERID = $(this).attr("id");
         if (customLayer[LAYERID]) {
@@ -109,8 +112,10 @@ function initLayerAction() {
 
     $("#list_realtime").off("click", ".addRealTime").on("click", ".addRealTime", function(e) {
         $(this).toggleClass("active");
-        if ($(this).attr("id") != "awgr") {
 
+
+        if ($(this).attr("id") != "awgr") {
+            $("#list_realtime").hide();
             const settings = {
                 entity: $(this).attr("id")
             }
@@ -125,6 +130,7 @@ function initLayerAction() {
 
 
     $("#list_realtime").off("click", ".awgr").on("click", ".awgr", function(e) {
+        $("#list_realtime").hide();
 
         e.stopPropagation();
         $(this).toggleClass("active");

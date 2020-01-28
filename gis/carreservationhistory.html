@@ -20,12 +20,15 @@
     <link href='css/fullcalender/daygrid/main.css' rel='stylesheet' />
     <link href='css/fullcalender/timegrid/main.css' rel='stylesheet' />
     <script src='js/fullcalender/core/main.js'></script>
+    <script src='js/fullcalender/core/locales-all.js'></script>
+
     <script src='js/fullcalender/interaction/main.js'></script>
     <script src='js/fullcalender/daygrid/main.js'></script>
     <script src='js/fullcalender/timegrid/main.js'></script>
     <script src='js/carreservationhistory.js'></script>
-    
+
 </head>
+
 <body class="main">
     <header>
         <a href="./index.html"> <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg" style="position: absolute;z-index: 2;"></a>
@@ -37,9 +40,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <label>Select Vehicle : </label>
+                    <label>Fahrzeug wählen : </label>
                     <select id="vehicleId">
-                        <option value="0">Vehicle Id</option>
+                        <option value="0">FahrzeugId Id</option>
                     </select>
                 </div>
                 <div class="col-md-12">
@@ -50,8 +53,14 @@
         </div>
 
         <div class="footer">
-            <div class="footer-text">powered by FIWARE</div>
+            <div class="container">
+                <div style="float:left;color:#fff"> <br>© wien.at: Magistrat der Stadt Wien, Rathaus, A-1082 Wien <br> <a target="_blank" title="Externer Link in neuem Fenster" href="http://www.wien.gv.at/info/datenschutz/index.html">Datenschutzrichtlinien</a> | <a target="_blank" title="Externer Link in neuem Fenster"
+                        href="http://www.wien.gv.at/info/impressum.html">Impressum</a> gemäß § 24 MedG Abs. 3<br></div>
+                <div class="footer-text"><img src="img/Powered-FIWARE-vert.png"></div>
+            </div>
+
         </div>
     </main>
 </body>
+
 </html>

@@ -21,6 +21,7 @@ var logistic = L.icon({
 
     popupAnchor: [-3, -36] // point from which the popup should open relative to the iconAnchor
 });
+
 let firstStart = true;
 var fg = L.featureGroup();
 let ViennaData = function() {
@@ -32,7 +33,7 @@ let ViennaData = function() {
 
     let _charts = [];
 
-    let _basePopupContent = '<div style="min-width:672px">' +
+    let _basePopupContent = '<div class="basePop">' +
         '<div class="col-xs-12">' +
         '<h3>%HEADLINE%</h3>' +
         '<div id="tabs">' +
@@ -99,7 +100,9 @@ let ViennaData = function() {
                                         for (var key in feature.properties) {
 
                                             if (key != "location" && key != "id" && key != "type" && key != "ip" && key != "__sysid__" && key != "__style" && key != "__id") {
-                                                tableRows += "<tr><td>" + key + "</td><td>" + feature.properties[key] + "</td></tr>";
+                                                let value = (feature.properties[key] == null || feature.properties[key] == "null") ? " - " : feature.properties[key];
+
+                                                tableRows += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
                                             }
 
                                         }
@@ -170,7 +173,9 @@ let ViennaData = function() {
 
 
             var url = './api/contextbroker/v2/entities/?limit=200';
-
+            $(".leaflet-marker").remove();
+            $(".leaflet-marker-icon").remove();
+            $(".leaflet-popup").remove();
             $.ajax({
                 url: url,
                 headers: { "fiware-service": settings.entity, "x-pvp-roles": "fiware(" + settings.entity + "=ql:r+cb:w)" },
@@ -355,7 +360,10 @@ let ViennaData = function() {
                 for (var key in feature.properties) {
 
                     if (key != "location" && key != "id" && key != "type" && key != "ip" && key != "__sysid__" && key != "__style" && key != "__id") {
-                        tableRows += "<tr><td>" + key + "</td><td>" + feature.properties[key] + "</td></tr>";
+
+                        let value = (feature.properties[key] == null || feature.properties[key] == "null") ? " - " : feature.properties[key];
+
+                        tableRows += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
                     }
 
                 }
@@ -392,45 +400,6 @@ let ViennaData = function() {
             })
 
             _map.fitBounds(group.getBounds());
-        },
-        getHistoryData: function(id, entity, downloadType = "json") {
-
-
-            // if (firstStart) {
-
-            firstStart = false;
-            var fromDate = "2019-11-01";
-            var toDate = "2029-11-29";
-
-            var data = { 'fromDate': fromDate }
-
-            data['toDate'] = toDate;
-            var url = 'http://moft.apinf.io:8080/quantumleap/v2/entities/' + id;
-            $.ajax({
-                url: url,
-                headers: { "fiware-service": entity, "fiware-servicepath": "/", "x-pvp-roles": "fiware(" + entity + "=ql:r+cb:w)" },
-                type: "GET",
-                data: data,
-                success: function(result) {
-
-                    store.setItem("quantum_" + id, JSON.stringify(result), function() {
-                        _historyData[id] = result;
-                    });
-
-
-                    if (downloadType == 'csv') {
-                        self.downloadCsv(result, id)
-                    } else {
-                        self.downloadJson(result, id);
-                    }
-
-                },
-                error: function(result) {
-                    //  self.downloadJson(result.responseJSON, entityID);
-                }
-            });
-            //  }
-
         },
 
         getTabbedContent: function(entity, result, type) {
@@ -512,7 +481,7 @@ let ViennaData = function() {
 
 
 
-            return _basePopupContent.replace(/%HEADLINE%/gi, item.id).replace(/%TABCLASS%/gi, "").replace(/%TABSLINKS%/gi, links).replace(/%CONTENT%/gi, content).replace(/%CHART%/gi, chart).replace(/%BUTTONS%/gi, buttons);
+            return _basePopupContent.replace(/%HEADLINE%/gi, item.name.value).replace(/%TABCLASS%/gi, "").replace(/%TABSLINKS%/gi, links).replace(/%CONTENT%/gi, content).replace(/%CHART%/gi, chart).replace(/%BUTTONS%/gi, buttons);
 
 
         },

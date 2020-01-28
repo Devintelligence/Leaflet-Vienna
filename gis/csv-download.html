@@ -21,7 +21,7 @@
 
 <body class="main">
     <header>
-        <a href="./index.html"> <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg"></a>
+        <a href="./index.html"> <img class="header-img" src="https://www.wien.gv.at/layout-a/wien.at/img/logo-stadt_wien-hoch.svg" style="position: absolute;z-index: 2;"></a>
         <span class="header-text">Smart City Wien</span>
         <br>
         <br>
@@ -44,15 +44,15 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-2">
-                                <label for="dataModel">Data Model:*</label>
+                                <label for="dataModel">Daten Model:*</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="form-control" id="dataModel" placeholder="Data Model" title="Data Model">
-                                    <option value="0">Select Data Model</option>
-                                    <option value="rentalbike">rentalbike</option>
-                                    <option value="carusoreservationhistory">carusoreservationhistory</option>
-                                    <option value="vienna_buildings">vienna_buildings</option>
-                                    <option value="elogistik">elogistik</option>
+                                    <option value="0">Daten wählen</option>
+                                    <option value="rentalbike">Fahrradverleih (Sycube)</option>
+                                    <option value="carusoreservationhistory">Car Sharing (Caruso)</option>
+                                    <option value="vienna_buildings">Energie</option>
+                                    <option value="elogistik">E-Logistik</option>
                                 </select>
                             </div>
                         </div>
@@ -62,18 +62,18 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-2">
-                                <label for="dateRange" >Date Range:*</label>
+                                <label for="dateRange">Zeitraum:*</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="form-control" id="dateRange" placeholder="Data Model" title="Data Model">
-                                    <option value="0">Select Date Range</option>
-                                    <option value="Today">Today</option>
-                                    <option value="Yesterday">Yesterday</option>
-                                    <option value="Last Week">Last Week</option>
-                                    <option value="Last Month">Last Month</option>
-                                    <option value="Last Seven Days">Last Seven Days</option>
-                                    <option value="Last Thirty Day">Last Thirty Day</option>
-                                    <option value="custom">Custom</option>
+                                    <option value="0">Zeitraum wählen</option>
+                                    <option value="Today">Heute</option>
+                                    <option value="Yesterday">Gestern</option>
+                                    <option value="Last Week">Letzte Woche</option>
+                                    <option value="Last Month">Letzter Monat</option>
+                                    <option value="Last Seven Days">Letzen 7 Tage</option>
+                                    <option value="Last Thirty Day">Letzte 30 Tage</option>
+                                    <option value="custom">Individuell</option>
                                 </select>
                             </div>
                         </div>
@@ -83,13 +83,13 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-2">
-                                <label for="startDate">Start Date:*</label>
+                                <label for="startDate">Startdatum:*</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" id="startDate">
                             </div>
                             <div class="col-md-2">
-                                <label for="endDate">End Date:*</label>
+                                <label for="endDate">Enddatum:*</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" id="endDate">
@@ -101,16 +101,16 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            <h5>DataPoints</h5>
-                            <button class="btn btn-info btn-sm" id="dataPointsBtn" onclick="javascript:selectDataPoints()">Select/Unselect All</button>
+                            <h5>Datenpunkte</h5>
+                            <button class="btn btn-info btn-sm" id="dataPointsBtn" onclick="javascript:selectDataPoints()">Alles wählen/abwählen</button>
                             <div id='dataPointsDiv' style="margin-top: 10px" class="row"></div>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            <h5>Devices</h5>
-                            <button class="btn btn-info btn-sm" id="devicesBtn" onclick="javascript:selectDevices()">Select/Unselect All</button>
+                            <h5>Messstationen</h5>
+                            <button class="btn btn-info btn-sm" id="devicesBtn" onclick="javascript:selectDevices()">Alles wählen/abwählen</button>
                             <div id='devicesDiv' style="margin-top: 10px" class="row"></div>
                         </div>
                     </div>
@@ -125,7 +125,12 @@
         </div>
         <hr>
         <div class="footer">
-            <div class="footer-text">powered by FIWARE</div>
+            <div class="container">
+                <div style="float:left;color:#fff"> <br>© wien.at: Magistrat der Stadt Wien, Rathaus, A-1082 Wien <br> <a target="_blank" title="Externer Link in neuem Fenster" href="http://www.wien.gv.at/info/datenschutz/index.html">Datenschutzrichtlinien</a> | <a target="_blank" title="Externer Link in neuem Fenster"
+                        href="http://www.wien.gv.at/info/impressum.html">Impressum</a> gemäß § 24 MedG Abs. 3<br></div>
+                <div class="footer-text"><img src="img/Powered-FIWARE-vert.png"></div>
+            </div>
+
         </div>
     </main>
 </body>
