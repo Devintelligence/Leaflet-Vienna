@@ -1070,6 +1070,11 @@ iframe {
     pointer-events: none;
     white-space: nowrap;
     z-index: 6;
+    display: none;
+}
+
+.marker-vienna-icon:hover .leaflet-label {
+    display: block;
 }
 
 .leaflet-label.leaflet-clickable {

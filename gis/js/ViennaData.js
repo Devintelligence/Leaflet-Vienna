@@ -265,7 +265,7 @@ let ViennaData = function() {
                                 }
                                 let marker = L.marker([lat, lng], {
                                     icon: (settings.entity == "elogistics") ? logistic : new L.DivIcon({
-                                        className: 'my-div-icon',
+                                        className: 'marker-vienna-icon',
                                         html: '<img class="my-div-image" src="./images/vienna_buildings.png"/>' +
                                             '<span class="leaflet-label">' + text + '</span>'
                                     })
@@ -305,14 +305,20 @@ let ViennaData = function() {
 
                                 let lat = item.location.value.coordinates[0];
                                 let lng = item.location.value.coordinates[1];
-
+                                let text = "";
                                 if (settings.entity == "rentalbike") {
 
                                     lat = item.location.value.coordinates[1];
                                     lng = item.location.value.coordinates[0];
+                                    text = item.name.value;
                                 }
+                                let iconBike = new L.DivIcon({
+                                    className: 'marker-vienna-icon',
+                                    html: '<img class="my-div-image" src="./images/rentalbike.png"/>' +
+                                        '<span class="leaflet-label">' + text + '</span>'
+                                });
                                 let marker = L.marker([lat, lng], {
-                                    icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
+                                    icon: (settings.entity == "rentalbike") ? iconBike : viennabuildings
                                 }).addTo(fg).bindPopup(self.getItemContent(settings.entity, item), {
                                     maxWidth: 560,
                                     minWidth: 550
