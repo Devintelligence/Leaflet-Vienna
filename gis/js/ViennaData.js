@@ -247,21 +247,28 @@ let ViennaData = function() {
                             let item = buildings[b][0];
                             if (item.location != undefined && item.location.value.coordinates[0] != 0) {
 
-                                console.log(item);
-                                console.log(item.location.value);
-                                console.log(b);
-
                                 let lat = item.location.value.coordinates[0];
                                 let lng = item.location.value.coordinates[1];
-
+                                let text = "";
                                 if (b == "hauffgasse") {
-
+                                    text = "Hauffgasse 37-47, Block1, Stiege 1-3";
                                     lat = item.location.value.coordinates[1];
                                     lng = item.location.value.coordinates[0];
                                 }
 
+                                if (b == "Enk4") {
+                                    text = " Enkpl. 4";
+                                }
+
+                                if (b == "Lor54") {
+                                    text = "LoryStrasse 54";
+                                }
                                 let marker = L.marker([lat, lng], {
-                                    icon: (settings.entity == "elogistics") ? logistic : viennabuildings
+                                    icon: (settings.entity == "elogistics") ? logistic : new L.DivIcon({
+                                        className: 'my-div-icon',
+                                        html: '<img class="my-div-image" src="./images/vienna_buildings.png"/>' +
+                                            '<span class="leaflet-label">' + text + '</span>'
+                                    })
                                 }).addTo(fg).bindPopup(self.getTabbedContent(settings.entity, buildings[b], b), {
                                     maxWidth: 1000,
                                     minWidth: 1000
