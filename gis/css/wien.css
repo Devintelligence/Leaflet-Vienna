@@ -695,7 +695,7 @@ li.selected-layer a {
 #mapid {
     border-top: 1px solid #999;
     left: 0px;
-    bottom: 93px;
+    bottom: 0;
     position: absolute;
     right: 0;
     top: 50px;
