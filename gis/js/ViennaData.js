@@ -245,20 +245,30 @@ let ViennaData = function() {
 
                         for (b in buildings) {
                             let item = buildings[b][0];
-                            if (item.location != undefined) {
-
+                            if (item.location != undefined && item.location.value.coordinates[0] != 0) {
 
                                 let lat = item.location.value.coordinates[0];
                                 let lng = item.location.value.coordinates[1];
-
+                                let text = "";
                                 if (b == "hauffgasse") {
-
+                                    text = "Hauffgasse 37-47, Block1, Stiege 1-3";
                                     lat = item.location.value.coordinates[1];
                                     lng = item.location.value.coordinates[0];
                                 }
 
+                                if (b == "Enk4") {
+                                    text = " Enkpl. 4";
+                                }
+
+                                if (b == "Lor54") {
+                                    text = "LoryStrasse 54";
+                                }
                                 let marker = L.marker([lat, lng], {
-                                    icon: (settings.entity == "elogistics") ? logistic : viennabuildings
+                                    icon: (settings.entity == "elogistics") ? logistic : new L.DivIcon({
+                                        className: 'marker-vienna-icon',
+                                        html: '<img class="my-div-image" src="./images/vienna_buildings.png"/>' +
+                                            '<span class="leaflet-label">' + text + '</span>'
+                                    })
                                 }).addTo(fg).bindPopup(self.getTabbedContent(settings.entity, buildings[b], b), {
                                     maxWidth: 1000,
                                     minWidth: 1000
@@ -275,12 +285,12 @@ let ViennaData = function() {
 
                             }
                         }
-                        if (settings.entity == "elogistics") {
-                            setTimeout(function() {
-                                _map.fitBounds(fg.getBounds());
-                            }, 300);
+                        //  if (settings.entity == "elogistics") {
+                        setTimeout(function() {
+                            _map.fitBounds(fg.getBounds());
+                        }, 300);
 
-                        }
+                        //   }
 
                     } else if (settings.entity == "rentalbike") {
 
@@ -295,14 +305,20 @@ let ViennaData = function() {
 
                                 let lat = item.location.value.coordinates[0];
                                 let lng = item.location.value.coordinates[1];
-
+                                let text = "";
                                 if (settings.entity == "rentalbike") {
 
                                     lat = item.location.value.coordinates[1];
                                     lng = item.location.value.coordinates[0];
+                                    text = item.name.value;
                                 }
+                                let iconBike = new L.DivIcon({
+                                    className: 'marker-vienna-icon',
+                                    html: '<img class="my-div-image" src="./images/rentalbike.png"/>' +
+                                        '<span class="leaflet-label">' + text + '</span>'
+                                });
                                 let marker = L.marker([lat, lng], {
-                                    icon: (settings.entity == "rentalbike") ? rentalbike : viennabuildings
+                                    icon: (settings.entity == "rentalbike") ? iconBike : viennabuildings
                                 }).addTo(fg).bindPopup(self.getItemContent(settings.entity, item), {
                                     maxWidth: 560,
                                     minWidth: 550
