@@ -19,7 +19,7 @@ while True:
 	try:
 		today = datetime.datetime.now()
 		start_time = today.strftime('%Y-%m-%dT%H:%M:%S')
-		modified_gte = (today - timedelta(hours = 25)).strftime('%Y-%m-%dT%H:%MZ')
+		modified_gte = (today - timedelta(hours = 1)).strftime('%Y-%m-%dT%H:%MZ')
 		print("Program starts running at ", start_time)
 		orionUri = os.getenv('orionUri', 'http://0.0.0.0:1026/') + 'v2/entities'
 		print('Orion Uri: ', orionUri)
