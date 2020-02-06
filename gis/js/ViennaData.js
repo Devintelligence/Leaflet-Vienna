@@ -263,13 +263,21 @@ let ViennaData = function() {
                                 if (b == "Lor54") {
                                     text = "LoryStrasse 54";
                                 }
+
+                                let popupData = self.getTabbedContent(settings.entity, buildings[b], b);
+
+                                if (settings.entity == "elogistik") {
+                                    buildings[b][0].name = {};
+                                    buildings[b][0].name.value = buildings[b][0].id;
+                                    popupData = self.getItemContent(settings.entity, buildings[b][0]);
+                                }
                                 let marker = L.marker([lat, lng], {
                                     icon: (settings.entity == "elogistik") ? logistic : new L.DivIcon({
                                         className: 'marker-vienna-icon',
                                         html: '<img class="my-div-image" src="./images/vienna_buildings.png"/>' +
                                             '<span class="leaflet-label">' + text + '</span>'
                                     })
-                                }).addTo(fg).bindPopup(self.getTabbedContent(settings.entity, buildings[b], b), {
+                                }).addTo(fg).bindPopup(popupData, {
                                     maxWidth: 1000,
                                     minWidth: 1000
 
@@ -475,8 +483,9 @@ let ViennaData = function() {
             let content = "";
 
 
-            chart += '<iframe src="' + _charts[item.id].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
-
+            if (_charts[item.id] != undefined) {
+                chart += '<iframe src="' + _charts[item.id].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
+            }
 
             buttons = "";
 
