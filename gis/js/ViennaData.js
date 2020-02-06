@@ -222,7 +222,7 @@ let ViennaData = function() {
                         $('[id^=chart]').hide();
 
                     });
-                    if (settings.entity == "vienna_buildings" || settings.entity == "elogistics") {
+                    if (settings.entity == "vienna_buildings" || settings.entity == "elogistik") {
 
 
                         let buildings = [];
@@ -264,7 +264,7 @@ let ViennaData = function() {
                                     text = "LoryStrasse 54";
                                 }
                                 let marker = L.marker([lat, lng], {
-                                    icon: (settings.entity == "elogistics") ? logistic : new L.DivIcon({
+                                    icon: (settings.entity == "elogistik") ? logistic : new L.DivIcon({
                                         className: 'marker-vienna-icon',
                                         html: '<img class="my-div-image" src="./images/vienna_buildings.png"/>' +
                                             '<span class="leaflet-label">' + text + '</span>'
