@@ -285,7 +285,7 @@ let ViennaData = function() {
 
                             }
                         }
-                        //  if (settings.entity == "elogistics") {
+                        //  if (settings.entity == "elogistik") {
                         setTimeout(function() {
                             _map.fitBounds(fg.getBounds());
                         }, 300);
