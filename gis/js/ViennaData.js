@@ -247,13 +247,13 @@ let ViennaData = function() {
                             let item = buildings[b][0];
                             if (item.location != undefined && item.location.value.coordinates[0] != 0) {
 
-                                let lat = item.location.value.coordinates[0];
-                                let lng = item.location.value.coordinates[1];
+                                let lat = item.location.value.coordinates[1];
+                                let lng = item.location.value.coordinates[0];
                                 let text = "";
                                 if (b == "hauffgasse") {
                                     text = "Hauffgasse 37-47, Block1, Stiege 1-3";
-                                    lat = item.location.value.coordinates[1];
-                                    lng = item.location.value.coordinates[0];
+                                    //   lat = item.location.value.coordinates[1];
+                                    //  lng = item.location.value.coordinates[0];
                                 }
 
                                 if (b == "Enk4") {
