@@ -253,7 +253,7 @@ function addWFSLayer(LAYERID) {
             mymap.addLayer(customMarkerLayer[LAYERID]);
 
             setTimeout(function() {
-                mymap.fitBounds(customMarkerLayer[LAYERID].getBounds());
+                //       mymap.fitBounds(customMarkerLayer[LAYERID].getBounds());
             }, 300);
         }
     });
