@@ -1,7 +1,7 @@
 var customLayer = {};
 var customMarkerLayer = {};
 var mymap = null;
-
+var currentLayers = [];
 let store = localforage.createInstance({
     name: 'vienna'
 });
@@ -90,7 +90,7 @@ function initLayerAction() {
             $(this).removeClass("selected-layer");
 
         } else {
-
+            currentLayers.push(LAYERID);
             $(this).addClass("selected-layer");
             customLayer[LAYERID] = new L.TileLayer.WMS("http://data.wien.gv.at/daten/wms", {
                 layers: LAYERID,

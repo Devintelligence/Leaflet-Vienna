@@ -64,6 +64,8 @@ let ViennaData = function() {
             self = this;
             _map = map;
             _data = data;
+            $(".selected-layer").trigger("click");
+
             self.getGrafanaCharts(settings);
             fg.addTo(_map)
 
