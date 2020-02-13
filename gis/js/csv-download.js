@@ -1,11 +1,16 @@
 $(document).ready(function() {
     $("#dataModel").change(function() {
+        var valueText = ''
         var value = $(this).val()
         if (value == '0') {
             $("#dataHtml").hide();
             return true;
         } else {
-            var url = './api/contextbroker/v2/entities'
+            if(value == 'vienna_buildings_hauffgasse'){
+                valueText = 'hauffgasse';
+                value = 'vienna_buildings';
+            }
+            var url = './api/contextbroker/v2/entities?limit=200'
             $.ajax({
                 url: url,
                 headers: { "fiware-service": value, "fiware-servicepath": "/" },
@@ -15,6 +20,24 @@ $(document).ready(function() {
                     var devicesHtmlOdd = '<div class="col-md-6">';
                     var dataPointsHtmlEven = '<div class="col-md-6">';
                     var devicesHtmlEven = '<div class="col-md-6">';
+                    if(value == 'vienna_buildings'){
+                        dataValues = [];
+                        if(valueText == 'hauffgasse'){
+                            for (var index = 0; index < result.length; index++) {
+                                if(result[index]['type'] == 'hauffgasse'){
+                                    dataValues.push(result[index])
+                                }
+                            }
+                        }
+                        else{
+                            for (var index = 0; index < result.length; index++) {
+                                if(result[index]['type'] != 'hauffgasse'){
+                                    dataValues.push(result[index])
+                                }
+                            }
+                        }
+                        result = dataValues;
+                    }
                     var attributes = Object.keys(result[0]);
                     for (var index = 0; index < result.length; index++) {
                         let value = (result[index]['name'] != undefined) ? result[index]['name']["value"] : result[index]['id'];
@@ -81,6 +104,9 @@ function downloadData() {
     if (dataModel == '0') {
         alert('Please select data model.')
         return false;
+    }
+    if(dataModel == 'vienna_buildings_hauffgasse'){
+        dataModel = 'vienna_buildings';
     }
     var dateRange = $("#dateRange").val();
     if (dateRange == '0') {
