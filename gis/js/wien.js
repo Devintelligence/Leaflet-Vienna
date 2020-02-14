@@ -78,6 +78,10 @@ function initLayerButton() {
 function initLayerAction() {
 
     $("#list").off("click", ".addLayer").on("click", ".addLayer", function() {
+
+        $(".leaflet-marker").remove();
+        $(".leaflet-marker-icon").remove();
+        $(".leaflet-popup").remove();
         $("#list").hide();
 
         let LAYERID = $(this).attr("id");
