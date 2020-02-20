@@ -753,6 +753,8 @@ li.selected-layer a {
 
 .header-img {
     width: 80px;
+    margin-left: 10px;
+    margin-top: 10px;
 }
 
 .leaflet-popup-content {
