@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     $(".login-btn").click(function() {
 
-        var url = './gis/auth';
+        var url = './auth';
 
 
         $.ajax({
