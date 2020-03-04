@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     $(".login-btn").click(function() {
 
-        var url = './auth';
+        var url = 'https://stp-test.wien.gv.at:4543/smarter-together-dev/auth';
 
 
         $.ajax({
