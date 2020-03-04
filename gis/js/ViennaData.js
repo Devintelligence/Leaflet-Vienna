@@ -21,7 +21,11 @@ var logistic = L.icon({
 
     popupAnchor: [-3, -36] // point from which the popup should open relative to the iconAnchor
 });
-
+if (localforage != undefined) {
+    let store = localforage.createInstance({
+        name: 'vienna'
+    });
+}
 let firstStart = true;
 var fg = L.featureGroup();
 let ViennaData = function() {

@@ -2,14 +2,15 @@ var customLayer = {};
 var customMarkerLayer = {};
 var mymap = null;
 var currentLayers = [];
-let store = localforage.createInstance({
-    name: 'vienna'
-});
 
 if (!window.location.pathname.endsWith("/") && !window.location.pathname.endsWith(".html")) { window.location = window.location + "/"; }
 
 $(document).ready(function() {
 
+
+    $(".login-btn").click(function() {
+        console.log("test");
+    })
     initSearchField();
 
     loadLayers();
