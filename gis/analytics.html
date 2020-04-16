@@ -9,44 +9,43 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/leaflet.css" />
+
     <link rel="stylesheet" href="css/wien.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
+    <script src="js/Chart.bundle.min.js"></script>
+
     <script src="js/moment.js"></script>
     <script src="js/localforage.min.js"></script>
-    <script src="js/leaflet.js"></script>
-    <script src="js/leaflet-tilelayer-wmts.js"></script>
     <script src="js/jquery.min.js"></script>
 
 
 
-    <script src="js/ViennaData.js"></script>
-    <script src="js/wien.js"></script>
 
+    <script src="js/charts.js"></script>
     <script>
-        $(document).ready(function() {
-            var url = './api/grafana/api/search?query=&starred=false&type=dash-db';
+        /*  $(document).ready(function() {
+                    var url = './api/grafana/api/search?query=&starred=false&type=dash-db';
 
 
 
-            $.ajax({
-                url: url,
-                type: "GET",
-                dataType: "json",
-                success: function(result) {
-                    for (r in result) {
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(result) {
+                            for (r in result) {
 
 
-                        $("#stats").append(' <iframe src="' + result[r].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>');
+                                $("#stats").append(' <iframe src="' + result[r].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>');
 
 
-                    }
-                }
+                            }
+                        }
 
-            });
+                    });
 
-        });
+                });*/
     </script>
 
 </head>
@@ -76,6 +75,17 @@
     <br>
     <br>
     <div id="stats">
+
+        <div class="row">
+            <div class="col-xs-4"> <canvas id="RentalBikeStation:30002" data-service="rentalbike" width="400" height="400"></canvas></div>
+            <div class="col-xs-4"> <canvas id="RentalBikeStation:30001" data-service="rentalbike" width="400" height="400"></canvas></div>
+            <div class="col-xs-4"> <canvas id="ReservationHistory:613" data-service="carusoreservationhistory" width="400" height="400"></canvas></div>
+            <div class="col-xs-4"> <canvas id="ReservationHistory:580" data-service="carusoreservationhistory" width="400" height="400"></canvas></div>
+
+            <div class="col-xs-4"> <canvas id="ReservationHistory:609" data-service="carusoreservationhistory" width="400" height="400"></canvas></div>
+
+        </div>
+
 
 
     </div>
