@@ -98,7 +98,7 @@ function getChartData(render = false) {
                 for (set in value[item]) {
 
                     if ($("#" + value[item][set].entityId).length == 0) {
-                        $("#stats .row").append('  <div class="col-4"><h6 style="text-align:center">' + value[item][set].entityId + '</h6> <canvas id="' + value[item][set].entityId + '" width="400" height="400"></canvas></div>');
+                        $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + value[item][set].entityId + '</h6> <canvas id="' + value[item][set].entityId + '" width="400" height="400"></canvas></div>');
                     }
                     first = value[item][set].attributes[0];
 
@@ -142,7 +142,7 @@ function getChartData(render = false) {
                     if (!isNaN(current)) {
 
                         if ($("#" + value[item][current].entityId).length == 0) {
-                            $("#stats .row").append('  <div class="col-4"><h6 style="text-align:center">Hauffgasse</h6> <canvas id="' + value[item][current].entityId + '" width="400" height="400"></canvas></div>');
+                            $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">Hauffgasse</h6> <canvas id="' + value[item][current].entityId + '" width="400" height="400"></canvas></div>');
                         }
                         buildedSets = [{
                                 label: value[item][current].attributes[1].attrName,
@@ -164,7 +164,7 @@ function getChartData(render = false) {
 
                     } else {
                         if ($("#" + value[item][current][0].entityId).length == 0) {
-                            $("#stats .row").append('  <div class="col-4"><h6 style="text-align:center">' + current + '</h6> <canvas id="' + value[item][current][0].entityId + '" width="400" height="400"></canvas></div>');
+                            $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + current + '</h6> <canvas id="' + value[item][current][0].entityId + '" width="400" height="400"></canvas></div>');
                         }
                         buildedSets = [];
                         for (temp in value[item][current]) {
