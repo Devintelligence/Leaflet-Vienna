@@ -25,27 +25,27 @@
     <script src="js/charts.js"></script>
     <script>
         /*   $(document).ready(function() {
-                                    var url = './api/grafana/api/search?query=&starred=false&type=dash-db';
+                                                                                                                    var url = './api/grafana/api/search?query=&starred=false&type=dash-db';
 
 
 
-                                    $.ajax({
-                                        url: url,
-                                        type: "GET",
-                                        dataType: "json",
-                                        success: function(result) {
-                                            for (r in result) {
+                                                                                                                    $.ajax({
+                                                                                                                        url: url,
+                                                                                                                        type: "GET",
+                                                                                                                        dataType: "json",
+                                                                                                                        success: function(result) {
+                                                                                                                            for (r in result) {
 
 
-                                                $("#stats").append(' <iframe src="' + result[r].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>');
+                                                                                                                                $("#stats").append(' <iframe src="' + result[r].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>');
 
 
-                                            }
-                                        }
+                                                                                                                            }
+                                                                                                                        }
 
-                                    });
+                                                                                                                    });
 
-                                });*/
+                                                                                                                });*/
     </script>
 
 </head>
@@ -74,8 +74,10 @@
 
     <br>
     <br>
-    <div id="stats">
-
+    <div id="stats" style="    position: relative;    width: 100%;    height: 100%;">
+        <div class="spinner-border" role="status" style="position: absolute;left:0px;right:0px;top:0px;bottom:0px;margin: 25% auto;">
+            <span class="sr-only">Loading...</span>
+        </div>
         <div class="row">
 
 

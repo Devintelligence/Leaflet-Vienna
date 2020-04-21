@@ -86,7 +86,7 @@ $(document).ready(function() {
 });
 
 function getChartData(render = false) {
-    $("#stats .row").empty();
+
 
     localforage.getItem('entity', function(err, value) {
 
@@ -192,7 +192,7 @@ function getChartData(render = false) {
                 }
             }
         }
-
+        $(".spinner-border").remove();
 
 
 
