@@ -97,6 +97,10 @@ function getChartData(render = false) {
             if (item != "vienna_buildings") {
                 for (set in value[item]) {
 
+
+                    colorFirst = poolColors(1, 1);
+                    colorSecond = poolColors(1, 1);
+
                     if ($("#" + value[item][set].entityId).length == 0) {
                         $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + value[item][set].entityId + '</h6> <canvas id="' + value[item][set].entityId + '" width="400" height="400"></canvas></div>');
                     }
@@ -106,27 +110,16 @@ function getChartData(render = false) {
                     let buildedSets = [{
                             label: first.attrName,
                             data: first.values,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-
-                            ],
+                            backgroundColor: colorFirst,
+                            borderColor: colorFirst,
                             borderWidth: 1
                         },
                         {
                             label: second.attrName,
                             data: second.values,
-                            backgroundColor: [
-                                'rgba(75, 192, 192, 0.2)',
+                            backgroundColor: colorSecond,
 
-                            ],
-                            borderColor: [
-                                'rgba(75, 192, 192, 0.2)',
-
-                            ],
+                            borderColor: colorSecond,
                             borderWidth: 1
                         }
                     ]
@@ -141,20 +134,17 @@ function getChartData(render = false) {
 
                     if (!isNaN(current)) {
 
+
                         if ($("#" + value[item][current].entityId).length == 0) {
                             $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">Hauffgasse</h6> <canvas id="' + value[item][current].entityId + '" width="400" height="400"></canvas></div>');
                         }
+
+                        color = poolColors(value[item][current].length, 1);
                         buildedSets = [{
                                 label: value[item][current].attributes[1].attrName,
                                 data: value[item][current].attributes[1].values,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-
-                                ],
+                                backgroundColor: color,
+                                borderColor: color,
                                 borderWidth: 1
                             }
 
@@ -167,19 +157,19 @@ function getChartData(render = false) {
                             $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + current + '</h6> <canvas id="' + value[item][current][0].entityId + '" width="400" height="400"></canvas></div>');
                         }
                         buildedSets = [];
+
                         for (temp in value[item][current]) {
+
+
+                            let color = poolColors(1, 1);
+
+
 
                             buildedSets.push({
                                     label: value[item][current][temp].entityId,
                                     data: value[item][current][temp].attributes[3].values,
-                                    backgroundColor: [
-                                        'rgba(255, 99, 132, 0.2)',
-
-                                    ],
-                                    borderColor: [
-                                        'rgba(255, 99, 132, 1)',
-
-                                    ],
+                                    backgroundColor: color,
+                                    borderColor: color,
                                     borderWidth: 1
                                 }
 
@@ -199,6 +189,22 @@ function getChartData(render = false) {
 
 
     });
+}
+
+
+function dynamicColor(opactiy) {
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    return "rgba(" + r + "," + g + "," + b + ", " + opactiy + ")";
+};
+
+function poolColors(a, opactiy) {
+    var pool = [];
+    for (var i = 0; i < a; i++) {
+        pool.push(this.dynamicColor(opactiy));
+    }
+    return pool;
 }
 
 function renderCharts(entityId, index, buildedSets) {
