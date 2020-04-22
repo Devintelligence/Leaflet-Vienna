@@ -110,14 +110,19 @@ function getChartData(render = false) {
                     let buildedSets = [{
                             label: first.attrName,
                             data: first.values,
-                            backgroundColor: colorFirst,
                             borderColor: colorFirst,
-                            borderWidth: 1
+                            borderWidth: 1,
+                            backgroundColor: colorFirst,
+
+                            fill: false,
+
                         },
                         {
                             label: second.attrName,
                             data: second.values,
+                            fill: false,
                             backgroundColor: colorSecond,
+
 
                             borderColor: colorSecond,
                             borderWidth: 1
@@ -145,6 +150,7 @@ function getChartData(render = false) {
                                 data: value[item][current].attributes[1].values,
                                 backgroundColor: color,
                                 borderColor: color,
+                                fill: false,
                                 borderWidth: 1
                             }
 
@@ -166,11 +172,12 @@ function getChartData(render = false) {
 
 
                             buildedSets.push({
+                                    fill: false,
                                     label: value[item][current][temp].entityId,
                                     data: value[item][current][temp].attributes[3].values,
                                     backgroundColor: color,
                                     borderColor: color,
-                                    borderWidth: 1
+                                    borderWidth: 0
                                 }
 
                             )
