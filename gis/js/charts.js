@@ -8,83 +8,83 @@ $(document).ready(function() {
 
 
     getChartData();
-    if (window.location.pathname.indexOf("analytics.html") > -1) {
-        let entities = [{
-            "entity": "rentalbike",
 
-        }, {
-            "entity": "carusoreservationhistory",
+    let entities = [{
+        "entity": "rentalbike",
 
-        }, {
-            "entity": "vienna_buildings",
+    }, {
+        "entity": "carusoreservationhistory",
 
-        }, {
-            "entity": "elogistik",
+    }, {
+        "entity": "vienna_buildings",
 
-        }]
+    }, {
+        "entity": "elogistik",
 
-
-        let chartEntities = [];
-
-        for (var item in entities) {
-            let value = entities[item].entity;
-            if (chartEntities[value] == undefined) {
-                chartEntities[value] = [];
-            }
-            var url = './api/contextbroker/v2/entities?limit=200'
-            $.ajax({
-                url: url,
-                headers: { "fiware-service": value, "fiware-servicepath": "/" },
-                type: "GET",
+    }]
 
 
-                success: function(result) {
+    let chartEntities = [];
 
-                    for (var i in result) {
-                        var startdate = moment();
-                        startdate = startdate.subtract(1, "weeks");
-                        data = { 'fromDate': startdate.format("YYYY-MM-DD") };
-                        var url = './api/quantumleap/v2/entities/' + result[i].id;
-                        $.ajax({
-                            url: url,
-                            headers: { "fiware-service": value, "fiware-servicepath": "/" },
-                            type: "GET",
-                            data: data,
+    for (var item in entities) {
+        let value = entities[item].entity;
+        if (chartEntities[value] == undefined) {
+            chartEntities[value] = [];
+        }
+        var url = './api/contextbroker/v2/entities?limit=200'
+        $.ajax({
+            url: url,
+            headers: { "fiware-service": value, "fiware-servicepath": "/" },
+            type: "GET",
 
-                            success: function(itemData) {
-                                if (itemData.entityId.split("_").length > 1) {
 
-                                    if (chartEntities[value][itemData.entityId.split("_")[0]] == undefined) {
-                                        chartEntities[value][itemData.entityId.split("_")[0]] = [];
-                                    }
-                                    chartEntities[value][itemData.entityId.split("_")[0]].push(itemData);
+            success: function(result) {
 
-                                } else {
-                                    chartEntities[value].push(itemData);
+                for (var i in result) {
+                    var startdate = moment();
+                    startdate = startdate.subtract(1, "weeks");
+                    data = { 'fromDate': startdate.format("YYYY-MM-DD") };
+                    var url = './api/quantumleap/v2/entities/' + result[i].id;
+                    $.ajax({
+                        url: url,
+                        headers: { "fiware-service": value, "fiware-servicepath": "/" },
+                        type: "GET",
+                        data: data,
+
+                        success: function(itemData) {
+                            if (itemData.entityId.split("_").length > 1) {
+
+                                if (chartEntities[value][itemData.entityId.split("_")[0]] == undefined) {
+                                    chartEntities[value][itemData.entityId.split("_")[0]] = [];
                                 }
-                                localforage.setItem("entity", chartEntities).then(function() {
+                                chartEntities[value][itemData.entityId.split("_")[0]].push(itemData);
 
-                                }).then(function(value) {
-                                    // we got our value
-                                }).catch(function(err) {
-                                    // we got an error
-                                });
-
+                            } else {
+                                chartEntities[value].push(itemData);
                             }
-                        });
+                            localforage.setItem("entity", chartEntities).then(function() {
 
-                    }
+                            }).then(function(value) {
+                                // we got our value
+                            }).catch(function(err) {
+                                // we got an error
+                            });
 
-
+                        }
+                    });
 
                 }
 
-            });
-        }
-        if ($("canvas").length == 0) {
-            getChartData();
-        }
+
+
+            }
+
+        });
     }
+    if ($("canvas").length == 0) {
+        getChartData();
+    }
+
 });
 
 function getChartData(render = false) {
