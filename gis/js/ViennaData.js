@@ -126,41 +126,7 @@ let ViennaData = function() {
 
                 }
             } else {
-                var url = './api/grafana/api/search?folderIds=0&query=&starred=false';
-
-
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(result) {
-                        for (r in result) {
-                            let title = result[r]["title"].split(":");
-
-                            if (_charts[title[0]] == undefined) {
-
-                                _charts[title[0]] = [];
-                            }
-
-                            result[r].url = result[r].url.replace("/d/", "/d-solo/");
-
-                            if (_charts[result[r]["title"]] == undefined) {
-
-                                _charts[result[r]["title"]] = [];
-                            }
-
-                            result[r].url = result[r].url.replace("/d/", "/d-solo/");
-                            _charts[title[0]] = result[r];
-
-                            _charts[result[r]["title"]] = result[r];
-                        };
-
-                    },
-                    complete: function() {
-                        self.getData(settings);
-                    }
-
-                });
+                self.getData(settings);
             }
         },
 
@@ -342,7 +308,7 @@ let ViennaData = function() {
                                 marker.on('click', function(e) {
 
                                     window.location.hash = '#chart_' + item.id;
-
+                                    getSingleChartData(settings.entity, item.id);
 
                                 });
 
@@ -444,13 +410,8 @@ let ViennaData = function() {
 
 
 
-            if (_charts[type] != undefined) {
+            chart = '  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + item.id + '</h6> <canvas id="' + item.id + '" width="400" height="400"></canvas></div>';
 
-                chart += '<iframe src="' + _charts[type].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
-
-            } else {
-                chart = "";
-            }
 
 
             let tableRows = "";
@@ -478,6 +439,8 @@ let ViennaData = function() {
             content += tableRows;
             tabs += '<li><a href="#chart_' + type + '" class="tabitem chartTab" id="">Statistik</a></li>';
             content += "<div class='tab  ' id='chart_" + type + "'  ><div  class='tabContent' style='padding:5px;'>" + chart + "</div></div>";
+
+
             return _tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%MORETABS%/gi, tabs).replace(/%TABCLASS%/gi, "buildings").replace(/%TABCONTENT%/gi, content);
         },
         getItemContent: function(entity, item) {
@@ -489,9 +452,7 @@ let ViennaData = function() {
             let content = "";
 
 
-            if (_charts[item.id] != undefined) {
-                chart += '<iframe src="' + _charts[item.id].url + '?theme=light&panelId=2" width="600" height="450" frameborder="0"></iframe>';
-            }
+            chart = ' <canvas id="' + item.id + '" width="400" height="400"></canvas>';
 
             buttons = "";
 
