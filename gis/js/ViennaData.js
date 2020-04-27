@@ -413,7 +413,6 @@ let ViennaData = function() {
 
             chart = ' <canvas id="' + type + '" width="400" height="400" style="    max-width: 100%;          max-height: 100%;"></canvas>';
 
-            console.log(chart);
 
             let tableRows = "";
 

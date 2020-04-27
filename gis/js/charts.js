@@ -26,72 +26,89 @@ $(document).ready(function() {
 
     let chartEntities = [];
 
-    for (var item in entities) {
-        let value = entities[item].entity;
-        if (chartEntities[value] == undefined) {
-            chartEntities[value] = [];
-        }
-        var url = './api/contextbroker/v2/entities?limit=200'
-        $.ajax({
-            url: url,
-            headers: { "fiware-service": value, "fiware-servicepath": "/" },
-            type: "GET",
+    store.getItem('lastUpdate', function(err, value) {
+        console.log(value);
+        if (moment(value) < moment().subtract(5, "minute") || value == null) {
+            store.setItem("lastUpdate", moment().format("DD.MM.YYYY HH:mm")).then(function() {
+
+            }).then(function(value) {
+                // we got our value
+            }).catch(function(err) {
+                console.log(err);
+            });
 
 
-            success: function(result) {
+            for (var item in entities) {
+                let value = entities[item].entity;
+                if (chartEntities[value] == undefined) {
+                    chartEntities[value] = [];
+                }
+                var url = './api/contextbroker/v2/entities?limit=200'
+                $.ajax({
+                    url: url,
+                    headers: { "fiware-service": value, "fiware-servicepath": "/" },
+                    type: "GET",
 
-                for (var i in result) {
-                    var startdate = moment();
-                    startdate = startdate.subtract(1, "weeks");
-                    data = { 'fromDate': startdate.format("YYYY-MM-DD") };
-                    var url = './api/quantumleap/v2/entities/' + result[i].id;
-                    $.ajax({
-                        url: url,
-                        headers: { "fiware-service": value, "fiware-servicepath": "/" },
-                        type: "GET",
-                        data: data,
 
-                        success: function(itemData) {
-                            if (itemData.entityId.split("_").length > 1) {
+                    success: function(result) {
 
-                                if (chartEntities[value][itemData.entityId.split("_")[0]] == undefined) {
-                                    chartEntities[value][itemData.entityId.split("_")[0]] = [];
+                        for (var i in result) {
+                            var startdate = moment();
+                            startdate = startdate.subtract(1, "weeks");
+                            data = { 'fromDate': startdate.format("YYYY-MM-DD") };
+                            var url = './api/quantumleap/v2/entities/' + result[i].id;
+                            $.ajax({
+                                url: url,
+                                headers: { "fiware-service": value, "fiware-servicepath": "/" },
+                                type: "GET",
+                                data: data,
+
+                                success: function(itemData) {
+
+                                    if (itemData.entityId.split("_").length > 1) {
+
+                                        if (chartEntities[value][itemData.entityId.split("_")[0]] == undefined) {
+                                            chartEntities[value][itemData.entityId.split("_")[0]] = [];
+                                        }
+                                        chartEntities[value][itemData.entityId.split("_")[0]].push(itemData);
+
+                                    } else {
+                                        chartEntities[value].push(itemData);
+                                    }
+                                    store.setItem("entity", chartEntities).then(function() {
+
+                                    }).then(function(value) {
+                                        // we got our value
+                                    }).catch(function(err) {
+                                        // we got an error
+                                    });
+
                                 }
-                                chartEntities[value][itemData.entityId.split("_")[0]].push(itemData);
-
-                            } else {
-                                chartEntities[value].push(itemData);
-                            }
-                            localforage.setItem("entity", chartEntities).then(function() {
-
-                            }).then(function(value) {
-                                // we got our value
-                            }).catch(function(err) {
-                                // we got an error
                             });
 
                         }
-                    });
-
-                }
 
 
 
+                    }
+
+                });
             }
 
-        });
-    }
-    if ($("canvas").length == 0) {
-        getChartData();
-    }
 
+
+            if ($("canvas").length == 0) {
+                getChartData();
+            }
+        }
+    });
 });
 
 function getChartData(render = false) {
 
 
 
-    localforage.getItem('entity', function(err, value) {
+    store.getItem('entity', function(err, value) {
         $("#stats .row").empty();
 
         for (var item in value) {
@@ -110,7 +127,6 @@ function getChartData(render = false) {
 
                             $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + value[item][set].entityId + '</h6> <canvas id="' + value[item][set].entityId + '" width="400" height="400"></canvas></div>');
                         } else {
-                            console.log("#chart_" + value[item][set].entityId);
                             $("#chart_" + value[item][set].entityId).html('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + value[item][set].entityId + '</h6> <canvas id="' + value[item][set].entityId + '" width="400" height="400"></canvas></div>');
 
                         }
@@ -210,7 +226,7 @@ function getChartData(render = false) {
 }
 
 function getSingleChartData(item, id) {
-    localforage.getItem('entity', function(err, value) {
+    store.getItem('entity', function(err, value) {
 
 
 
@@ -248,11 +264,10 @@ function getSingleChartData(item, id) {
             ]
 
 
-
             var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
                 type: 'line',
                 data: {
-                    labels: data.index,
+                    labels: value[item][current].index,
                     datasets: buildedSets
                 },
                 options: {
@@ -295,9 +310,6 @@ function getSingleChartData(item, id) {
                 if (!isNaN(current)) {
 
 
-                    if ($("#" + value[item][current].entityId).length == 0) {
-                        $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">Hauffgasse</h6> <canvas id="' + value[item][current].entityId + '" width="400" height="400"></canvas></div>');
-                    }
 
                     color = poolColors(value[item][current].length, 1);
                     buildedSets = [{
@@ -311,10 +323,10 @@ function getSingleChartData(item, id) {
 
                     ]
 
-                    var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
+                    var currentAnalyticsChart = new Chart($("[id^='chart_hauffgasse']").find("canvas"), {
                         type: 'line',
                         data: {
-                            labels: data.index,
+                            labels: value[item][current].index,
                             datasets: buildedSets
                         },
                         options: {
@@ -345,10 +357,9 @@ function getSingleChartData(item, id) {
 
                         }
                     });
+
                 } else {
-                    if ($("#" + value[item][current][0].entityId).length == 0) {
-                        $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + current + '</h6> <canvas id="' + value[item][current][0].entityId + '" width="400" height="400"></canvas></div>');
-                    }
+
                     buildedSets = [];
 
                     for (temp in value[item][current]) {
@@ -370,10 +381,10 @@ function getSingleChartData(item, id) {
                         )
                     }
 
-                    var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
+                    var currentAnalyticsChart = new Chart($("[id^='chart_" + current + "']").find("canvas"), {
                         type: 'line',
                         data: {
-                            labels: data.index,
+                            labels: value[item][current][0].index,
                             datasets: buildedSets
                         },
                         options: {
@@ -406,6 +417,8 @@ function getSingleChartData(item, id) {
                     });
 
                 }
+
+
             }
         }
     });
