@@ -259,6 +259,7 @@ let ViennaData = function() {
                                 marker.on('click', function(e) {
 
                                     window.location.hash = '#chart_' + e.target._id;
+                                    getSingleChartData(settings.entity, item.id);
 
                                 });
 
@@ -410,9 +411,9 @@ let ViennaData = function() {
 
 
 
-            chart = '  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + item.id + '</h6> <canvas id="' + item.id + '" width="400" height="400"></canvas></div>';
+            chart = ' <canvas id="' + type + '" width="400" height="400" style="    max-width: 100%;          max-height: 100%;"></canvas>';
 
-
+            console.log(chart);
 
             let tableRows = "";
 
@@ -438,7 +439,7 @@ let ViennaData = function() {
 
             content += tableRows;
             tabs += '<li><a href="#chart_' + type + '" class="tabitem chartTab" id="">Statistik</a></li>';
-            content += "<div class='tab  ' id='chart_" + type + "'  ><div  class='tabContent' style='padding:5px;'>" + chart + "</div></div>";
+            content += "<div class='tab  ' id='chart_" + type + "'  ><div  class='tabContent' style='padding:7px;'>" + chart + "</div></div>";
 
 
             return _tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%MORETABS%/gi, tabs).replace(/%TABCLASS%/gi, "buildings").replace(/%TABCONTENT%/gi, content);
@@ -452,7 +453,7 @@ let ViennaData = function() {
             let content = "";
 
 
-            chart = ' <canvas id="' + item.id + '" width="400" height="400"></canvas>';
+            chart = ' <canvas id="' + item.id + '" width="400" height="400" style="max-width: 100%;          max-height: 100%;"></canvas>';
 
             buttons = "";
 

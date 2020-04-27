@@ -246,7 +246,7 @@ function getSingleChartData(item, id) {
                     borderWidth: 1
                 }
             ]
-            console.log("#" + data.entityId);
+
 
 
             var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
@@ -311,8 +311,40 @@ function getSingleChartData(item, id) {
 
                     ]
 
-                    renderCharts(value[item][current].entityId, value[item][current].index, buildedSets);
+                    var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
+                        type: 'line',
+                        data: {
+                            labels: data.index,
+                            datasets: buildedSets
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
 
+                                    }
+                                }],
+                                xAxes: [{
+                                    type: 'time',
+                                    time: {
+                                        displayFormats: {
+                                            'millisecond': 'MM.DD',
+                                            'second': 'MM.DD',
+                                            'minute': 'MM.DD',
+                                            'hour': 'MM.DD',
+                                            'day': 'MM.DD',
+                                            'week': 'MM.DD',
+                                            'month': 'MM.DD',
+                                            'quarter': 'MM.DD',
+                                            'year': 'MM.DD',
+                                        }
+                                    }
+                                }]
+                            }
+
+                        }
+                    });
                 } else {
                     if ($("#" + value[item][current][0].entityId).length == 0) {
                         $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + current + '</h6> <canvas id="' + value[item][current][0].entityId + '" width="400" height="400"></canvas></div>');
@@ -338,7 +370,40 @@ function getSingleChartData(item, id) {
                         )
                     }
 
-                    renderCharts(value[item][current][0].entityId, value[item][current][0].index, buildedSets);
+                    var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
+                        type: 'line',
+                        data: {
+                            labels: data.index,
+                            datasets: buildedSets
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+
+                                    }
+                                }],
+                                xAxes: [{
+                                    type: 'time',
+                                    time: {
+                                        displayFormats: {
+                                            'millisecond': 'MM.DD',
+                                            'second': 'MM.DD',
+                                            'minute': 'MM.DD',
+                                            'hour': 'MM.DD',
+                                            'day': 'MM.DD',
+                                            'week': 'MM.DD',
+                                            'month': 'MM.DD',
+                                            'quarter': 'MM.DD',
+                                            'year': 'MM.DD',
+                                        }
+                                    }
+                                }]
+                            }
+
+                        }
+                    });
 
                 }
             }
