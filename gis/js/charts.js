@@ -48,7 +48,7 @@ $(document).ready(function() {
                     url: url,
                     headers: { "fiware-service": value, "fiware-servicepath": "/" },
                     type: "GET",
-
+                    async: false,
 
                     success: function(result) {
 
@@ -62,7 +62,7 @@ $(document).ready(function() {
                                 headers: { "fiware-service": value, "fiware-servicepath": "/" },
                                 type: "GET",
                                 data: data,
-
+                                async: false,
                                 success: function(itemData) {
 
                                     if (itemData.entityId.split("_").length > 1) {
