@@ -1109,7 +1109,7 @@ iframe {
     content: "";
 }
 
-.chartjs-render-monitor {
+.tabContent .chartjs-render-monitor {
     width: 96%!important;
     height: 100%!important;
 }
