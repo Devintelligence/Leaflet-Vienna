@@ -28,7 +28,7 @@ $(document).ready(function() {
 
     store.getItem('lastUpdate', function(err, value) {
         console.log(value);
-        if (moment(value) < moment().subtract(5, "minute") || value == null) {
+        if (moment(value) < moment().subtract(1, "day") || value == null) {
             store.setItem("lastUpdate", moment().format("DD.MM.YYYY HH:mm")).then(function() {
 
             }).then(function(value) {
@@ -54,7 +54,7 @@ $(document).ready(function() {
 
                         for (var i in result) {
                             var startdate = moment();
-                            startdate = startdate.subtract(1, "weeks");
+                            startdate = startdate.subtract(1, "day");
                             data = { 'fromDate': startdate.format("YYYY-MM-DD") };
                             var url = './api/quantumleap/v2/entities/' + result[i].id;
                             $.ajax({
@@ -75,19 +75,21 @@ $(document).ready(function() {
                                     } else {
                                         chartEntities[value].push(itemData);
                                     }
-                                    store.setItem("entity", chartEntities).then(function() {
 
-                                    }).then(function(value) {
-                                        // we got our value
-                                    }).catch(function(err) {
-                                        // we got an error
-                                    });
 
                                 }
                             });
 
-                        }
 
+
+                        }
+                        store.setItem("entity", chartEntities).then(function() {
+
+                        }).then(function(value) {
+                            // we got our value
+                        }).catch(function(err) {
+                            // we got an error
+                        });
 
 
                     }
@@ -97,9 +99,10 @@ $(document).ready(function() {
 
 
 
-            if ($("canvas").length == 0) {
-                getChartData();
-            }
+
+        }
+        if ($("canvas").length == 0) {
+            getChartData();
         }
     });
 });
@@ -263,11 +266,17 @@ function getSingleChartData(item, id) {
                 }
             ]
 
+            if (item == "rentalbike") {
+                index = data.index
+            } else {
+                index = value[item][current].index
+            }
+
 
             var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
                 type: 'line',
                 data: {
-                    labels: value[item][current].index,
+                    labels: index,
                     datasets: buildedSets
                 },
                 options: {
