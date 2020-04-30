@@ -9,6 +9,31 @@ $(document).ready(function() {
 
     getChartData();
 
+
+    Chart.plugins.register({
+        afterDraw: function(chart) {
+            console.log('After draw: ', chart);
+            console.log('Title: ', chart.options.title.text);
+            console.log(chart.data.datasets[0].data.length, chart.canvas.id, chart.data.datasets[0].data);
+            if (chart.data.datasets[0].data.length0 == 0) {
+                // No data is present
+                var ctx = chart.chart.ctx;
+                var width = chart.chart.width;
+                var height = chart.chart.height;
+                chart.clear();
+
+                ctx.save();
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = "16px normal 'Helvetica Nueue'";
+                // chart.options.title.text <=== gets title from chart 
+                // width / 2 <=== centers title on canvas 
+                // 18 <=== aligns text 18 pixels from top, just like Chart.js 
+                ctx.fillText('Keine Daten für diesen Zeitraum verfügbar', width / 2, height / 2);
+                ctx.restore();
+            }
+        }
+    });
     let entities = [{
         "entity": "rentalbike",
 
@@ -291,15 +316,15 @@ function getSingleChartData(item, id) {
                             type: 'time',
                             time: {
                                 displayFormats: {
-                                    'millisecond': 'MM.DD',
-                                    'second': 'MM.DD',
-                                    'minute': 'MM.DD',
-                                    'hour': 'MM.DD',
-                                    'day': 'MM.DD',
-                                    'week': 'MM.DD',
-                                    'month': 'MM.DD',
-                                    'quarter': 'MM.DD',
-                                    'year': 'MM.DD',
+                                    'millisecond': 'HH:mm',
+                                    'second': 'HH:mm',
+                                    'minute': 'HH:mm',
+                                    'hour': 'HH:mm',
+                                    'day': 'HH:mm',
+                                    'week': 'HH:mm',
+                                    'month': 'HH:mm',
+                                    'quarter': 'HH:mm',
+                                    'year': 'HH:mm',
                                 }
                             }
                         }]
@@ -350,15 +375,15 @@ function getSingleChartData(item, id) {
                                     type: 'time',
                                     time: {
                                         displayFormats: {
-                                            'millisecond': 'MM.DD',
-                                            'second': 'MM.DD',
-                                            'minute': 'MM.DD',
-                                            'hour': 'MM.DD',
-                                            'day': 'MM.DD',
-                                            'week': 'MM.DD',
-                                            'month': 'MM.DD',
-                                            'quarter': 'MM.DD',
-                                            'year': 'MM.DD',
+                                            'millisecond': 'HH:mm',
+                                            'second': 'HH:mm',
+                                            'minute': 'HH:mm',
+                                            'hour': 'HH:mm',
+                                            'day': 'HH:mm',
+                                            'week': 'HH:mm',
+                                            'month': 'HH:mm',
+                                            'quarter': 'HH:mm',
+                                            'year': 'HH:mm',
                                         }
                                     }
                                 }]
@@ -408,15 +433,15 @@ function getSingleChartData(item, id) {
                                     type: 'time',
                                     time: {
                                         displayFormats: {
-                                            'millisecond': 'MM.DD',
-                                            'second': 'MM.DD',
-                                            'minute': 'MM.DD',
-                                            'hour': 'MM.DD',
-                                            'day': 'MM.DD',
-                                            'week': 'MM.DD',
-                                            'month': 'MM.DD',
-                                            'quarter': 'MM.DD',
-                                            'year': 'MM.DD',
+                                            'millisecond': 'HH:mm',
+                                            'second': 'HH:mm',
+                                            'minute': 'HH:mm',
+                                            'hour': 'HH:mm',
+                                            'day': 'HH:mm',
+                                            'week': 'HH:mm',
+                                            'month': 'HH:mm',
+                                            'quarter': 'HH:mm',
+                                            'year': 'HH:mm',
                                         }
                                     }
                                 }]
@@ -481,15 +506,15 @@ function renderCharts(entityId, index, buildedSets) {
                         type: 'time',
                         time: {
                             displayFormats: {
-                                'millisecond': 'MM.DD',
-                                'second': 'MM.DD',
-                                'minute': 'MM.DD',
-                                'hour': 'MM.DD',
-                                'day': 'MM.DD',
-                                'week': 'MM.DD',
-                                'month': 'MM.DD',
-                                'quarter': 'MM.DD',
-                                'year': 'MM.DD',
+                                'millisecond': 'HH:mm',
+                                'second': 'HH:mm',
+                                'minute': 'HH:mm',
+                                'hour': 'HH:mm',
+                                'day': 'HH:mm',
+                                'week': 'HH:mm',
+                                'month': 'HH:mm',
+                                'quarter': 'HH:mm',
+                                'year': 'HH:mm',
                             }
                         }
                     }]
@@ -497,5 +522,6 @@ function renderCharts(entityId, index, buildedSets) {
 
             }
         });
+
     }
 }
