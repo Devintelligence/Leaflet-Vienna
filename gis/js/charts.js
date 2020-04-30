@@ -12,9 +12,7 @@ $(document).ready(function() {
 
     Chart.plugins.register({
         afterDraw: function(chart) {
-            console.log('After draw: ', chart);
-            console.log('Title: ', chart.options.title.text);
-            console.log(chart.data.datasets[0].data.length, chart.canvas.id, chart.data.datasets[0].data);
+
             if (chart.data.datasets[0].data.length0 == 0) {
                 // No data is present
                 var ctx = chart.chart.ctx;
@@ -52,7 +50,6 @@ $(document).ready(function() {
     let chartEntities = [];
 
     store.getItem('lastUpdate', function(err, value) {
-        console.log(value);
         if (moment(value) < moment().subtract(1, "day") || value == null) {
             store.setItem("lastUpdate", moment().format("DD.MM.YYYY HH:mm")).then(function() {
 
@@ -305,7 +302,44 @@ function getSingleChartData(item, id) {
                     datasets: buildedSets
                 },
                 options: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            fontColor: 'rgb(255, 99, 132)'
+                        },
+                        onHover: function(event, legendItem) {
+                            document.getElementById("canvas").style.cursor = 'pointer';
+                        },
+                        onClick: function(e, legendItem) {
+                            var index = legendItem.datasetIndex;
+                            var ci = this.chart;
+                            var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;
 
+                            ci.data.datasets.forEach(function(e, i) {
+                                var meta = ci.getDatasetMeta(i);
+
+                                if (i !== index) {
+                                    if (!alreadyHidden) {
+                                        meta.hidden = meta.hidden === null ? !meta.hidden : null;
+                                    } else if (meta.hidden === null) {
+                                        meta.hidden = true;
+                                    }
+                                } else if (i === index) {
+                                    meta.hidden = null;
+                                }
+                            });
+
+                            ci.update();
+                        },
+                    },
+                    tooltips: {
+                        custom: function(tooltip) {
+                            if (!tooltip.opacity) {
+                                document.getElementById("canvas").style.cursor = 'default';
+                                return;
+                            }
+                        }
+                    },
                     scales: {
                         yAxes: [{
                             ticks: {
@@ -365,6 +399,44 @@ function getSingleChartData(item, id) {
                             datasets: buildedSets
                         },
                         options: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    fontColor: 'rgb(255, 99, 132)'
+                                },
+                                onHover: function(event, legendItem) {
+                                    document.getElementById("canvas").style.cursor = 'pointer';
+                                },
+                                onClick: function(e, legendItem) {
+                                    var index = legendItem.datasetIndex;
+                                    var ci = this.chart;
+                                    var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;
+
+                                    ci.data.datasets.forEach(function(e, i) {
+                                        var meta = ci.getDatasetMeta(i);
+
+                                        if (i !== index) {
+                                            if (!alreadyHidden) {
+                                                meta.hidden = meta.hidden === null ? !meta.hidden : null;
+                                            } else if (meta.hidden === null) {
+                                                meta.hidden = true;
+                                            }
+                                        } else if (i === index) {
+                                            meta.hidden = null;
+                                        }
+                                    });
+
+                                    ci.update();
+                                },
+                            },
+                            tooltips: {
+                                custom: function(tooltip) {
+                                    if (!tooltip.opacity) {
+                                        document.getElementById("canvas").style.cursor = 'default';
+                                        return;
+                                    }
+                                }
+                            },
                             scales: {
                                 yAxes: [{
                                     ticks: {
@@ -423,6 +495,45 @@ function getSingleChartData(item, id) {
                             datasets: buildedSets
                         },
                         options: {
+
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    fontColor: 'rgb(255, 99, 132)'
+                                },
+                                onHover: function(event, legendItem) {
+                                    document.getElementById("canvas").style.cursor = 'pointer';
+                                },
+                                onClick: function(e, legendItem) {
+                                    var index = legendItem.datasetIndex;
+                                    var ci = this.chart;
+                                    var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;
+
+                                    ci.data.datasets.forEach(function(e, i) {
+                                        var meta = ci.getDatasetMeta(i);
+
+                                        if (i !== index) {
+                                            if (!alreadyHidden) {
+                                                meta.hidden = meta.hidden === null ? !meta.hidden : null;
+                                            } else if (meta.hidden === null) {
+                                                meta.hidden = true;
+                                            }
+                                        } else if (i === index) {
+                                            meta.hidden = null;
+                                        }
+                                    });
+
+                                    ci.update();
+                                },
+                            },
+                            tooltips: {
+                                custom: function(tooltip) {
+                                    if (!tooltip.opacity) {
+                                        document.getElementById("canvas").style.cursor = 'default';
+                                        return;
+                                    }
+                                }
+                            },
                             scales: {
                                 yAxes: [{
                                     ticks: {
