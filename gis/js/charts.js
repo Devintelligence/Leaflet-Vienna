@@ -254,7 +254,8 @@ function getSingleChartData(item, id) {
     store.getItem('entity', function(err, value) {
 
 
-
+        var index = [0];
+        let buildedSets = [];
         if (item != "vienna_buildings") {
 
             let data = value[item].find(e => e.entityId == id);
@@ -262,111 +263,120 @@ function getSingleChartData(item, id) {
             colorFirst = poolColors(1, 1);
             colorSecond = poolColors(1, 1);
 
+            if (data != undefined) {
+                first = data.attributes[0];
 
-            first = data.attributes[0];
+                second = data.attributes[1];
+                buildedSets = [{
+                        label: first.attrName,
+                        data: first.values,
+                        borderColor: colorFirst,
+                        borderWidth: 1,
+                        backgroundColor: colorFirst,
 
-            second = data.attributes[1];
-            let buildedSets = [{
-                    label: first.attrName,
-                    data: first.values,
-                    borderColor: colorFirst,
-                    borderWidth: 1,
-                    backgroundColor: colorFirst,
+                        fill: false,
 
-                    fill: false,
-
-                },
-                {
-                    label: second.attrName,
-                    data: second.values,
-                    fill: false,
-                    backgroundColor: colorSecond,
+                    },
+                    {
+                        label: second.attrName,
+                        data: second.values,
+                        fill: false,
+                        backgroundColor: colorSecond,
 
 
-                    borderColor: colorSecond,
-                    borderWidth: 1
+                        borderColor: colorSecond,
+                        borderWidth: 1
+                    }
+                ]
+
+                if (item == "rentalbike") {
+                    index = data.index
+                } else {
+                    index = value[item][current].index
                 }
-            ]
 
-            if (item == "rentalbike") {
-                index = data.index
+                var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
+                    type: 'line',
+                    data: {
+                        labels: index,
+                        datasets: buildedSets
+                    },
+                    options: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                fontColor: 'rgb(255, 99, 132)'
+                            },
+                            onHover: function(event, legendItem) {
+                                document.getElementById("canvas").style.cursor = 'pointer';
+                            },
+                            onClick: function(e, legendItem) {
+                                var index = legendItem.datasetIndex;
+                                var ci = this.chart;
+                                var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;
+
+                                ci.data.datasets.forEach(function(e, i) {
+                                    var meta = ci.getDatasetMeta(i);
+
+                                    if (i !== index) {
+                                        if (!alreadyHidden) {
+                                            meta.hidden = meta.hidden === null ? !meta.hidden : null;
+                                        } else if (meta.hidden === null) {
+                                            meta.hidden = true;
+                                        }
+                                    } else if (i === index) {
+                                        meta.hidden = null;
+                                    }
+                                });
+
+                                ci.update();
+                            },
+                        },
+                        tooltips: {
+                            custom: function(tooltip) {
+                                if (!tooltip.opacity) {
+                                    document.getElementById("canvas").style.cursor = 'default';
+                                    return;
+                                }
+                            }
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+
+                                }
+                            }],
+                            xAxes: [{
+                                type: 'time',
+                                time: {
+                                    displayFormats: {
+                                        'millisecond': 'HH:mm',
+                                        'second': 'HH:mm',
+                                        'minute': 'HH:mm',
+                                        'hour': 'HH:mm',
+                                        'day': 'HH:mm',
+                                        'week': 'HH:mm',
+                                        'month': 'HH:mm',
+                                        'quarter': 'HH:mm',
+                                        'year': 'HH:mm',
+                                    }
+                                }
+                            }]
+                        }
+
+                    }
+                });
             } else {
-                index = value[item][current].index
+
+                var ctx = $("[id^='chart_']").find("canvas")[0].getContext('2d');
+
+                ctx.font = "20px Arial";
+                ctx.fillText("Keine Daten für diesen Zeitraum verfügbar", 10, 50);
+
             }
 
 
-            var currentAnalyticsChart = new Chart($("[id^='chart_']").find("canvas"), {
-                type: 'line',
-                data: {
-                    labels: index,
-                    datasets: buildedSets
-                },
-                options: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            fontColor: 'rgb(255, 99, 132)'
-                        },
-                        onHover: function(event, legendItem) {
-                            document.getElementById("canvas").style.cursor = 'pointer';
-                        },
-                        onClick: function(e, legendItem) {
-                            var index = legendItem.datasetIndex;
-                            var ci = this.chart;
-                            var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;
-
-                            ci.data.datasets.forEach(function(e, i) {
-                                var meta = ci.getDatasetMeta(i);
-
-                                if (i !== index) {
-                                    if (!alreadyHidden) {
-                                        meta.hidden = meta.hidden === null ? !meta.hidden : null;
-                                    } else if (meta.hidden === null) {
-                                        meta.hidden = true;
-                                    }
-                                } else if (i === index) {
-                                    meta.hidden = null;
-                                }
-                            });
-
-                            ci.update();
-                        },
-                    },
-                    tooltips: {
-                        custom: function(tooltip) {
-                            if (!tooltip.opacity) {
-                                document.getElementById("canvas").style.cursor = 'default';
-                                return;
-                            }
-                        }
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-
-                            }
-                        }],
-                        xAxes: [{
-                            type: 'time',
-                            time: {
-                                displayFormats: {
-                                    'millisecond': 'HH:mm',
-                                    'second': 'HH:mm',
-                                    'minute': 'HH:mm',
-                                    'hour': 'HH:mm',
-                                    'day': 'HH:mm',
-                                    'week': 'HH:mm',
-                                    'month': 'HH:mm',
-                                    'quarter': 'HH:mm',
-                                    'year': 'HH:mm',
-                                }
-                            }
-                        }]
-                    }
-
-                }
-            });
 
 
 
