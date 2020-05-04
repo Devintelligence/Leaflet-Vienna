@@ -97,7 +97,7 @@ function initLayerAction() {
         } else {
             currentLayers.push(LAYERID);
             $(this).addClass("selected-layer");
-            customLayer[LAYERID] = new L.TileLayer.WMS("http://data.wien.gv.at/daten/wms", {
+            customLayer[LAYERID] = new L.TileLayer.WMS("https://data.wien.gv.at/daten/wms", {
                 layers: LAYERID,
                 format: 'image/gif',
                 version: '1.3.0',
@@ -165,7 +165,7 @@ function loadBaseLayer() {
             }
         })
         //http://www.wien.gv.at/wmts/fmzk/pastell/google3857/{z}/{y}/{x}.jpeg
-    var ign = new L.tileLayer("http://www.wien.gv.at/wmts/lb2014/farbe/google3857/{z}/{y}/{x}.jpeg", {
+    var ign = new L.tileLayer("https://www.wien.gv.at/wmts/lb2014/farbe/google3857/{z}/{y}/{x}.jpeg", {
         maxZoom: 19,
         minZoom: 11,
         attribution: ''
