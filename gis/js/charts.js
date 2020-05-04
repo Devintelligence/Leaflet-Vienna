@@ -384,6 +384,13 @@ function getSingleChartData(item, id) {
         }
         if (item == "vienna_buildings") {
 
+            if (id.indexOf("hauff") != -1) {
+                var ctx = $("[id^='chart_']").find("canvas")[0].getContext('2d');
+
+                ctx.font = "20px Arial";
+                ctx.fillText("Keine Daten für diesen Zeitraum verfügbar", 10, 50);
+            }
+
             for (current in value[item]) {
 
                 if (!isNaN(current)) {
@@ -402,7 +409,7 @@ function getSingleChartData(item, id) {
 
                     ]
 
-                    var currentAnalyticsChart = new Chart($("[id^='chart_hauffgasse']").find("canvas"), {
+                    var currentAnalyticsChart = new Chart(ctx, {
                         type: 'line',
                         data: {
                             labels: value[item][current].index,
