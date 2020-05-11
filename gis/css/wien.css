@@ -1147,8 +1147,9 @@ iframe {
 }
 
 #stats .row select {
-    border: 1px solid;
+    border: 1px solid #000;
     margin-left: 10px;
+    color: #000;
 }
 
 .chartSwitcher {
@@ -1156,6 +1157,7 @@ iframe {
     border: 1px solid #000;
     font-size: 17px;
     margin-bottom: 4px;
+    color: #000;
 }
 
 .detailTable>.tabContent {

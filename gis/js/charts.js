@@ -162,9 +162,9 @@ function getChartData() {
 
                         }
                     }
-                    first = value[item][set].attributes[0];
+                    first = value[item][set].attributes[1];
 
-                    second = value[item][set].attributes[1];
+                    second = value[item][set].attributes[0];
                     let buildedSets = [{
                             label: first.attrName,
                             data: first.values,
@@ -254,7 +254,7 @@ function getChartData() {
                             )
                         }
 
-                        $("#" + value[item][current][0].entityId).parent().find("h6").append("<select id='switchter_" + value[item][current][0].entityId + "'>" + options + "</select>");
+                        $("#" + value[item][current][0].entityId).parent().find("h6").append("<select class='chartSwitcher' id='switchter_" + value[item][current][0].entityId + "'>" + options + "</select>");
 
 
                         let currentChart = renderCharts(value[item][current][0].entityId, value[item][current][0].index, buildedSets);
