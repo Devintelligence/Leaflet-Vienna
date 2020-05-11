@@ -574,35 +574,17 @@ function getSingleChartData(item, id) {
                                         }
                                     }
                                 }]
-                            }
+                            },
+                            animation: {
+                                onComplete: function() {
 
+                                    getDropDown(current, currentAnalyticsChart, options);
+                                }
+                            },
                         }
                     });
 
-                    $("[id^='chart_" + current + "']").append("<select id='switchter_" + current + "'>" + options + "</select>");
 
-
-
-                    $("#switchter_" + current).change(function(e, index) {
-                        let indexed = $(this).prop('selectedIndex');
-                        if (indexed == 0) {
-                            for (var i = 0; i < currentAnalyticsChart.data.datasets.length; i++) {
-                                currentAnalyticsChart.chart.getDatasetMeta(i).hidden = false;
-
-                            }
-                        } else {
-                            for (var i = 0; i < currentAnalyticsChart.data.datasets.length; i++) {
-                                currentAnalyticsChart.chart.getDatasetMeta(i).hidden = true;
-
-                            }
-
-                            currentAnalyticsChart.chart.getDatasetMeta(indexed).hidden = false;
-                        }
-
-
-
-                        //currentAnalyticsChart.update();
-                    });
 
 
                 }
@@ -613,6 +595,33 @@ function getSingleChartData(item, id) {
     });
 
     $(".chartTab").trigger("click");
+}
+
+function getDropDown(id, chart, options) {
+    $("[id^='chart_" + current + "']").append("<select id='switchter_" + current + "'>" + options + "</select>");
+
+
+
+    $("#switchter_" + current).change(function(e, index) {
+        let indexed = $(this).prop('selectedIndex');
+        if (indexed == 0) {
+            for (var i = 0; i < currentAnalyticsChart.data.datasets.length; i++) {
+                currentAnalyticsChart.chart.getDatasetMeta(i).hidden = false;
+
+            }
+        } else {
+            for (var i = 0; i < currentAnalyticsChart.data.datasets.length; i++) {
+                currentAnalyticsChart.chart.getDatasetMeta(i).hidden = true;
+
+            }
+
+            currentAnalyticsChart.chart.getDatasetMeta(indexed).hidden = false;
+        }
+
+
+
+        currentAnalyticsChart.update();
+    });
 }
 
 
