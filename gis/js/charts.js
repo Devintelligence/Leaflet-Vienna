@@ -541,50 +541,51 @@ function getSingleChartData(item, id) {
 
                         )
                     }
+                    if ($("[id^='chart_" + current + "']").find("canvas")[0] != null) {
+                        let itemId = current;
+                        let ctx = $("[id^='chart_" + itemId + "']").find("canvas")[0].getContext('2d');
+                        var currentAnalyticsChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: value[item][current][0].index,
+                                datasets: buildedSets
+                            },
+                            options: {
 
-                    var currentAnalyticsChart = new Chart($("[id^='chart_" + current + "']").find("canvas"), {
-                        type: 'line',
-                        data: {
-                            labels: value[item][current][0].index,
-                            datasets: buildedSets
-                        },
-                        options: {
 
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
 
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true,
-
-                                    }
-                                }],
-                                xAxes: [{
-                                    type: 'time',
-                                    time: {
-                                        displayFormats: {
-                                            'millisecond': 'HH:mm',
-                                            'second': 'HH:mm',
-                                            'minute': 'HH:mm',
-                                            'hour': 'HH:mm',
-                                            'day': 'HH:mm',
-                                            'week': 'HH:mm',
-                                            'month': 'HH:mm',
-                                            'quarter': 'HH:mm',
-                                            'year': 'HH:mm',
                                         }
+                                    }],
+                                    xAxes: [{
+                                        type: 'time',
+                                        time: {
+                                            displayFormats: {
+                                                'millisecond': 'HH:mm',
+                                                'second': 'HH:mm',
+                                                'minute': 'HH:mm',
+                                                'hour': 'HH:mm',
+                                                'day': 'HH:mm',
+                                                'week': 'HH:mm',
+                                                'month': 'HH:mm',
+                                                'quarter': 'HH:mm',
+                                                'year': 'HH:mm',
+                                            }
+                                        }
+                                    }]
+                                },
+                                animation: {
+                                    onComplete: function() {
+                                        getDropDown(itemId, currentAnalyticsChart, options);
                                     }
-                                }]
-                            },
-                            animation: {
-                                onComplete: function() {
+                                },
+                            }
+                        });
 
-                                    getDropDown(current, currentAnalyticsChart, options);
-                                }
-                            },
-                        }
-                    });
-
-
+                    }
 
 
                 }
@@ -598,30 +599,35 @@ function getSingleChartData(item, id) {
 }
 
 function getDropDown(id, chart, options) {
-    $("[id^='chart_" + current + "']").append("<select id='switchter_" + current + "'>" + options + "</select>");
+
+
+    let temp = document.getElementById("chart_" + id);
+    if (temp != null && $("#switchter_" + id).length == 0) {
+        $(temp).append("<select id='switchter_" + id + "'>" + options + "</select>");
 
 
 
-    $("#switchter_" + current).change(function(e, index) {
-        let indexed = $(this).prop('selectedIndex');
-        if (indexed == 0) {
-            for (var i = 0; i < currentAnalyticsChart.data.datasets.length; i++) {
-                currentAnalyticsChart.chart.getDatasetMeta(i).hidden = false;
+        $("#switchter_" + id).change(function(e, index) {
+            let indexed = $(this).prop('selectedIndex');
+            if (indexed == 0) {
+                for (var i = 0; i < chart.data.datasets.length; i++) {
+                    chart.chart.getDatasetMeta(i).hidden = false;
 
+                }
+            } else {
+                for (var i = 0; i < chart.data.datasets.length; i++) {
+                    chart.chart.getDatasetMeta(i).hidden = true;
+
+                }
+
+                chart.chart.getDatasetMeta(indexed).hidden = false;
             }
-        } else {
-            for (var i = 0; i < currentAnalyticsChart.data.datasets.length; i++) {
-                currentAnalyticsChart.chart.getDatasetMeta(i).hidden = true;
-
-            }
-
-            currentAnalyticsChart.chart.getDatasetMeta(indexed).hidden = false;
-        }
 
 
 
-        currentAnalyticsChart.update();
-    });
+            chart.update();
+        });
+    }
 }
 
 
