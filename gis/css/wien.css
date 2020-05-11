@@ -646,7 +646,7 @@ li a {
 
 li a:hover {
     color: red;
-    background: #f6f6f6;
+    background: transparent;
 }
 
 li.selected-layer a {
@@ -1112,4 +1112,41 @@ iframe {
 .tabContent .chartjs-render-monitor {
     width: 96%!important;
     height: 100%!important;
+}
+
+@media screen and (max-width:480px) {
+    html,
+    body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+    .burgerimage {
+        position: absolute;
+        top: 0;
+        right: 5%;
+        font-size: 28pt;
+        cursor: pointer;
+        transition: transform 0.8s ease;
+        color: #000;
+    }
+    nav {
+        display: block;
+        height: 50px;
+        position: fixed;
+        top: 0;
+        right: 8px;
+        z-index: 100;
+        left: 0px;
+        bottom: 0px;
+        border: 0;
+    }
+}
+
+#stats .row>div {
+    padding: 2%;
+}
+
+#stats .row select {
+    border: 1px solid;
+    margin-left: 10px;
 }
