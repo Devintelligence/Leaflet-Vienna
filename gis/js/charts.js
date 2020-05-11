@@ -149,8 +149,8 @@ function getChartData() {
                 for (set in value[item]) {
 
 
-                    colorFirst = poolColors(1, 1);
-                    colorSecond = poolColors(1, 1);
+                    colorFirst = "rgba(255,0,0,1)";
+                    colorSecond = "rgba(0,0,0,1)";
 
                     if ($("#" + value[item][set].entityId).length == 0) {
 
@@ -179,6 +179,7 @@ function getChartData() {
                             label: second.attrName,
                             data: second.values,
                             fill: fillChart,
+
                             backgroundColor: colorSecond,
 
 
@@ -186,7 +187,15 @@ function getChartData() {
                             borderWidth: 1
                         }
                     ]
-                    renderCharts(value[item][set].entityId, value[item][set].index, buildedSets, type);
+
+                    let index = value[item][set].index;
+
+                    if (item == "carusoreservationhistory") {
+
+                        index = value[item][set].attributes[10].values;
+                    }
+
+                    renderCharts(value[item][set].entityId, index, buildedSets, type);
                 }
 
 
@@ -752,12 +761,17 @@ function renderCharts(entityId, index, buildedSets, type = "line") {
                 options: {
 
                     scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }],
                         xAxes: [{
                             ticks: {
                                 // Create scientific notation labels
                                 callback: function(value, index, values) {
 
-                                    return moment(value).format("HH:mm");
+                                    return moment(value).format("DD.MM HH:mm");
                                 }
                             }
                         }]
