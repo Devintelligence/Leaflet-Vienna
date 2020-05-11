@@ -438,7 +438,7 @@ let ViennaData = function() {
 
             content += tableRows;
             tabs += '<li><a href="#chart_' + type + '" class="tabitem chartTab" id="">Statistik</a></li>';
-            content += "<div class='tab  ' id='chart_" + type + "'  ><div  class='tabContent' style='padding:7px;'>" + chart + "</div></div>";
+            content += "<div class='tab  ' id='chart_" + type + "'  ><div  class='tabContent' style='padding:7px;margin-top:10px'>" + chart + "</div></div>";
 
 
             return _tabTemplate.replace(/%TABSLINKS%/gi, links).replace(/%MORETABS%/gi, tabs).replace(/%TABCLASS%/gi, "buildings").replace(/%TABCONTENT%/gi, content);

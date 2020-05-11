@@ -1150,3 +1150,14 @@ iframe {
     border: 1px solid;
     margin-left: 10px;
 }
+
+.chartSwitcher {
+    height: 30px;
+    border: 1px solid #000;
+    font-size: 17px;
+    margin-bottom: 4px;
+}
+
+.detailTable>.tabContent {
+    margin-top: 10px;
+}

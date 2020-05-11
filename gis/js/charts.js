@@ -50,7 +50,7 @@ $(document).ready(function() {
     let chartEntities = [];
 
     store.getItem('lastUpdate', function(err, value) {
-        if (moment(value) < moment().subtract(1, "hour") || value == null) {
+        if (moment(value, "DD.MM.YYYY HH:mm").tz("Europe/Berlin").format("X") < moment().tz("Europe/Berlin").subtract(1, "hour").format("X") || value == null) {
             store.setItem("lastUpdate", moment().format("DD.MM.YYYY HH:mm")).then(function() {
 
             }).then(function(value) {
@@ -106,7 +106,7 @@ $(document).ready(function() {
 
                         }
                         store.setItem("entity", chartEntities).then(function() {
-
+                            getChartData();
                         }).then(function(value) {
                             // we got our value
                         }).catch(function(err) {
@@ -129,7 +129,7 @@ $(document).ready(function() {
     });
 });
 
-function getChartData(render = false) {
+function getChartData() {
 
 
 
@@ -138,8 +138,14 @@ function getChartData(render = false) {
 
         for (var item in value) {
             var buildedSets = [];
-
+            let type = "line";
+            let fillChart = false;
             if (item != "vienna_buildings") {
+                if (item == "carusoreservationhistory") {
+                    type = "bar";
+                    fillChart = true;
+                }
+
                 for (set in value[item]) {
 
 
@@ -166,13 +172,13 @@ function getChartData(render = false) {
                             borderWidth: 1,
                             backgroundColor: colorFirst,
 
-                            fill: false,
+                            fill: fillChart,
 
                         },
                         {
                             label: second.attrName,
                             data: second.values,
-                            fill: false,
+                            fill: fillChart,
                             backgroundColor: colorSecond,
 
 
@@ -180,7 +186,7 @@ function getChartData(render = false) {
                             borderWidth: 1
                         }
                     ]
-                    renderCharts(value[item][set].entityId, value[item][set].index, buildedSets);
+                    renderCharts(value[item][set].entityId, value[item][set].index, buildedSets, type);
                 }
 
 
@@ -213,7 +219,7 @@ function getChartData(render = false) {
 
                     } else {
                         if ($("#" + value[item][current][0].entityId).length == 0) {
-                            $("#stats .row").append('  <div class="col-12 col-lg-4"><h6 style="text-align:center">' + current + '</h6> <canvas id="' + value[item][current][0].entityId + '" width="400" height="400"></canvas></div>');
+                            $("#stats .row").append('  <div class="col-12 col-lg-4 col-md-6"><h6 style="text-align:center">' + current + '</h6> <canvas id="' + value[item][current][0].entityId + '" width="400" height="400"></canvas></div>');
                         }
                         buildedSets = [];
 
@@ -603,7 +609,7 @@ function getDropDown(id, chart, options) {
 
     let temp = document.getElementById("chart_" + id);
     if (temp != null && $("#switchter_" + id).length == 0) {
-        $(temp).append("<select id='switchter_" + id + "'>" + options + "</select>");
+        $(temp).append("<center><select class='chartSwitcher' id='switchter_" + id + "' >" + options + "</select></center>");
 
 
 
@@ -657,81 +663,109 @@ function poolColors(a, opactiy) {
     return pool;
 }
 
-function renderCharts(entityId, index, buildedSets) {
+function renderCharts(entityId, index, buildedSets, type = "line") {
     var ctx = document.getElementById(entityId);
     if (ctx != null) {
-        var currentAnalyticsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: index,
-                datasets: buildedSets
-            },
-            options: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        fontColor: 'rgb(255, 99, 132)'
-                    },
-                    onHover: function(event, legendItem) {
-                        document.getElementById("canvas").style.cursor = 'pointer';
-                    },
-                    onClick: function(e, legendItem) {
-                        var index = legendItem.datasetIndex;
-                        var ci = this.chart;
-                        var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;
+        if (type == "line") {
+            var currentAnalyticsChart = new Chart(ctx, {
+                type: 'line',
 
-                        ci.data.datasets.forEach(function(e, i) {
-                            var meta = ci.getDatasetMeta(i);
-
-                            if (i !== index) {
-                                if (!alreadyHidden) {
-                                    meta.hidden = meta.hidden === null ? !meta.hidden : null;
-                                } else if (meta.hidden === null) {
-                                    meta.hidden = true;
-                                }
-                            } else if (i === index) {
-                                meta.hidden = null;
-                            }
-                        });
-
-                        ci.update();
-                    },
+                data: {
+                    labels: index,
+                    datasets: buildedSets
                 },
-                /*  tooltips: {
-                      custom: function(tooltip) {
-                          if (!tooltip.opacity) {
-                              document.getElementById("canvas").style.cursor = 'default';
-                              return;
+                options: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            fontColor: 'rgb(255, 99, 132)'
+                        },
+                        onHover: function(event, legendItem) {
+                            document.getElementById("canvas").style.cursor = 'pointer';
+                        },
+                        onClick: function(e, legendItem) {
+                            var index = legendItem.datasetIndex;
+                            var ci = this.chart;
+                            var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;
+
+                            ci.data.datasets.forEach(function(e, i) {
+                                var meta = ci.getDatasetMeta(i);
+
+                                if (i !== index) {
+                                    if (!alreadyHidden) {
+                                        meta.hidden = meta.hidden === null ? !meta.hidden : null;
+                                    } else if (meta.hidden === null) {
+                                        meta.hidden = true;
+                                    }
+                                } else if (i === index) {
+                                    meta.hidden = null;
+                                }
+                            });
+
+                            ci.update();
+                        },
+                    },
+                    /*  tooltips: {
+                          custom: function(tooltip) {
+                              if (!tooltip.opacity) {
+                                  document.getElementById("canvas").style.cursor = 'default';
+                                  return;
+                              }
                           }
-                      }
-                  },*/
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
+                      },*/
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
 
-                        }
-                    }],
-                    xAxes: [{
-                        type: 'time',
-                        time: {
-                            displayFormats: {
-                                'millisecond': 'HH:mm',
-                                'second': 'HH:mm',
-                                'minute': 'HH:mm',
-                                'hour': 'HH:mm',
-                                'day': 'HH:mm',
-                                'week': 'HH:mm',
-                                'month': 'HH:mm',
-                                'quarter': 'HH:mm',
-                                'year': 'HH:mm',
                             }
-                        }
-                    }]
-                }
+                        }],
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                displayFormats: {
+                                    'millisecond': 'HH:mm',
+                                    'second': 'HH:mm',
+                                    'minute': 'HH:mm',
+                                    'hour': 'HH:mm',
+                                    'day': 'HH:mm',
+                                    'week': 'HH:mm',
+                                    'month': 'HH:mm',
+                                    'quarter': 'HH:mm',
+                                    'year': 'HH:mm',
+                                }
+                            }
+                        }]
+                    }
 
-            }
-        });
-        return currentAnalyticsChart;
+                }
+            });
+            return currentAnalyticsChart;
+        } else {
+            var currentAnalyticsChart = new Chart(ctx, {
+                type: 'bar',
+
+                data: {
+                    labels: index,
+                    datasets: buildedSets
+                },
+                options: {
+
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                // Create scientific notation labels
+                                callback: function(value, index, values) {
+
+                                    return moment(value).format("HH:mm");
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+
+            return currentAnalyticsChart;
+        }
     }
 }
