@@ -307,7 +307,11 @@ function getSingleChartData(item, id) {
         let buildedSets = [];
         if (item != "vienna_buildings") {
 
-            let data = value[item].find(e => e.entityId == id);
+          
+           let data = value[item].find(
+               function(){
+               return e.entityId == id;
+            });
 
             colorFirst = poolColors(1, 1);
             colorSecond = poolColors(1, 1);
@@ -672,7 +676,8 @@ function poolColors(a, opactiy) {
     return pool;
 }
 
-function renderCharts(entityId, index, buildedSets, type = "line") {
+
+function renderCharts(entityId, index, buildedSets, type) {
     var ctx = document.getElementById(entityId);
     if (ctx != null) {
         if (type == "line") {

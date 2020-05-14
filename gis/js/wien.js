@@ -3,6 +3,25 @@ var customMarkerLayer = {};
 var mymap = null;
 var currentLayers = [];
 
+if (!String.prototype.endsWith) {
+    String.prototype.endsWith = function(searchString, position) {
+        var subjectString = this.toString();
+        if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+          position = subjectString.length;
+        }
+        position -= searchString.length;
+        var lastIndex = subjectString.indexOf(searchString, position);
+        return lastIndex !== -1 && lastIndex === position;
+    };
+  }
+
+  if (!String.prototype.includes) {
+    String.prototype.includes = function() {
+        'use strict';
+        return String.prototype.indexOf.apply(this, arguments) !== -1;
+    };
+}
+
 if (!window.location.pathname.endsWith("/") && !window.location.pathname.endsWith(".html")) { window.location = window.location + "/"; }
 
 $(document).ready(function() {
@@ -175,8 +194,7 @@ function loadBaseLayer() {
 
     mymap.addLayer(ign);
 
-    //loadWienerLinien(ign);
-
+  
 
 
 }
@@ -263,55 +281,6 @@ function addWFSLayer(LAYERID) {
         }
     });
 }
+
 var marker;
 var first = true;
-
-function loadWienerLinien(ign) {
-
-    let request = new Request('/wien/api.php');
-    runRequest(request, ign)
-
-    reloader = setInterval(() => {
-
-        runRequest(request, ign)
-
-    }, 10000)
-
-
-
-
-}
-
-function runRequest(request, ign) {
-
-    fetch(request)
-        .then(res => res.json())
-        .then(data => {
-            let monitors = data.data.monitors;
-            for (monitor in monitors) {
-                let currentMonitor = monitors[monitor];
-                let departures = currentMonitor.lines[0].departures.departure
-
-                let departureHTML = "";
-                for (departure in departures) {
-                    departureHTML += "<div style='width:340px;'>Abfahrt in <b>" + departures[departure].departureTime.countdown + " Minuten </b> <br> Geplant: <b>" + moment(departures[departure].departureTime.timePlanned).format("H:mm") + " Uhr</b><br> Real: <b>" + moment(departures[departure].departureTime.timeReal).format("H:mm") + " Uhr</b></div><hr>";
-                }
-
-
-                if (first) {
-                    marker = L.marker([currentMonitor.locationStop.geometry.coordinates[1], currentMonitor.locationStop.geometry.coordinates[0]], {
-                        icon: train
-                    }).addTo(mymap).bindPopup("<h3>" + currentMonitor.locationStop.properties.title + " </h3>" + departureHTML, {
-                        maxWidth: 560,
-                        minWidth: 550
-
-                    }).openPopup();
-                    first = false;
-                } else {
-                    marker._popup.setContent("<h3>" + currentMonitor.locationStop.properties.title + " </h3>" + departureHTML)
-                }
-
-            }
-
-        })
-}
