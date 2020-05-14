@@ -224,7 +224,7 @@ function getChartData() {
 
                         ]
 
-                        renderCharts(value[item][current].entityId, value[item][current].index, buildedSets);
+                        renderCharts(value[item][current].entityId, value[item][current].index, buildedSets,"line");
 
                     } else {
                         if ($("#" + value[item][current][0].entityId).length == 0) {
@@ -257,7 +257,7 @@ function getChartData() {
                         $("#" + value[item][current][0].entityId).parent().find("h6").append("<select class='chartSwitcher' id='switchter_" + value[item][current][0].entityId + "'>" + options + "</select>");
 
 
-                        let currentChart = renderCharts(value[item][current][0].entityId, value[item][current][0].index, buildedSets);
+                        let currentChart = renderCharts(value[item][current][0].entityId, value[item][current][0].index, buildedSets,"line");
 
                         $("#switchter_" + value[item][current][0].entityId).change(function(e, index) {
                             let indexed = $(this).prop('selectedIndex');
