@@ -72,12 +72,14 @@ $(document).ready(function() {
                     else if (vechile_data.state[data] == 'protected'){
                         color = 'orange';
                     }
+
+                    var title = "\nFahrzeug ID: " + vechile_data.vehicle_id[data] +
+                    "\nEntfernung: " + vechile_data.distance[data] +
+                    "\nNutzungsstart: "+ vechile_data.batterylevel_at_start[data] +
+                    "\nNutzungsende: "+ vechile_data.batterylevel_at_end[data]     ;
+
                     vehicle_entities.push({
-                        'title': ''.concat("\nFahrzeug ID: ", vechile_data.vehicle_id[data],
-                                           "\nEntfernung: ", vechile_data.distance[data],
-                                           "\nNutzungsstart: ", vechile_data.batterylevel_at_start[data],
-                                           "\nNutzungsende: ", vechile_data.batterylevel_at_end[data],
-                                           ),
+                        'title': title,
                         'start': vechile_data.reservation_start[data],
                         'backgroundColor': color,
                     });
