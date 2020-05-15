@@ -308,10 +308,7 @@ function getSingleChartData(item, id) {
         if (item != "vienna_buildings") {
 
           
-           let data = value[item].find(
-               function(){
-               return e.entityId == id;
-            });
+           let data = value[item].find(function(e){ return e.entityId == id;});
 
             colorFirst = poolColors(1, 1);
             colorSecond = poolColors(1, 1);
