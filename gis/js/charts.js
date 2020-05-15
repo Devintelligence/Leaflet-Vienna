@@ -307,8 +307,18 @@ function getSingleChartData(item, id) {
         let buildedSets = [];
         if (item != "vienna_buildings") {
 
-          
-           let data = value[item].find(function(e){ return e.entityId == id;});
+
+            var data;
+            var entityList = value[item];
+
+            for(i=0;i<entityList.length;i++){
+                var entity = entityList[i];
+                if(entity.entityId == id){
+                    data = entity;
+                    break;
+                }
+            }
+
 
             colorFirst = poolColors(1, 1);
             colorSecond = poolColors(1, 1);
