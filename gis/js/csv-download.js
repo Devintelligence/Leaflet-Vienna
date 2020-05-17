@@ -15,6 +15,7 @@ $(document).ready(function() {
                 url: url,
                 headers: { "fiware-service": value, "fiware-servicepath": "/" },
                 type: "GET",
+                cache:false,
                 success: function(result) {
                     var dataPointsHtmlOdd = '<div class="col-md-6">';
                     var devicesHtmlOdd = '<div class="col-md-6">';
@@ -191,12 +192,14 @@ function downloadData() {
             headers: { "fiware-service": dataModel, "fiware-servicepath": "/" },
             type: "GET",
             data: data,
+            cache:false,
+            async:false,
             success: function(result) {
                 downloadCsv(result, entityIDDetail, dataPoints, dataModel)
 
             },
             error: function(xhr, status, error) {
-                alert(JSON.parse(xhr.responseText)['description'] + ' Device: ' + entityIDDetail);
+               alert(JSON.parse(xhr.responseText)['description'] + ' Device: ' + entityIDDetail);
             }
         });
     }
@@ -240,11 +243,31 @@ function downloadCsv(resultdata, entityID, dataPoints, dataModel) {
         dataStr = dataStr.substring(0, dataStr.length - 1)
         dataStr += '\n'
     }
+
+    var csvData = dataStr;
     dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(dataStr);
-    var downloadButton = document.createElement('a');
-    downloadButton.setAttribute("href", dataStr);
-    downloadButton.setAttribute("download", entityID + ".csv");
-    document.body.appendChild(downloadButton); // required for firefox
-    downloadButton.click();
-    downloadButton.remove();
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+    if(isIE)
+    {
+       
+       
+        var iframe = document.getElementById('csvDownloadFrame');
+        iframe = iframe.contentWindow || iframe.contentDocument;
+        iframe.document.open("text/csv", "replace");
+        iframe.document.write(csvData);
+        iframe.document.close();
+        iframe.focus();
+        iframe.document.execCommand('SaveAs', true, entityID + ".csv");
+    }
+    else
+    {
+        var downloadButton = document.createElement('a');
+        downloadButton.setAttribute("href", dataStr);
+        downloadButton.setAttribute("download", entityID + ".csv");
+        document.body.appendChild(downloadButton); // required for firefox
+        downloadButton.click();
+        downloadButton.remove();
+    }
+ 
 }
