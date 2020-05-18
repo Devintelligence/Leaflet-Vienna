@@ -309,7 +309,8 @@ let ViennaData = function() {
                                 marker.on('click', function(e) {
 
                                     window.location.hash = '#chart_' + item.id;
-                                    getSingleChartData(settings.entity, item.id);
+                                    setTimeout(function() { getSingleChartData(settings.entity, item.id); }, 500);
+
 
                                 });
 
