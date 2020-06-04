@@ -1167,3 +1167,5 @@ iframe {
 .btn-info, .btn-info:hover,.btn-info:active,.btn-info:focus{background-color: black;border-color: black;}
 
 .csv-download-container{margin-top: 50px;}
+
+#show-layers{display:none;}
