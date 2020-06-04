@@ -71,14 +71,14 @@ $(document).ready(function() {
                     headers: { "fiware-service": value, "fiware-servicepath": "/" },
                     type: "GET",
                     async: false,
-                    cache : false,
+                    cache: false,
 
                     success: function(result) {
 
                         for (var i in result) {
                             var startdate = moment();
                             startdate = startdate.subtract(1, "day");
-                            data = { 'fromDate': startdate.format("YYYY-MM-DD") };
+                            data = { 'fromDate': startdate.format("YYYY-MM-DD"), 'toDate': moment().add(1, "day").format("YYYY-MM-DD") };
                             var url = './api/quantumleap/v2/entities/' + result[i].id;
                             $.ajax({
                                 url: url,
@@ -86,7 +86,7 @@ $(document).ready(function() {
                                 type: "GET",
                                 data: data,
                                 async: false,
-                                cache : false,
+                                cache: false,
                                 success: function(itemData) {
 
                                     if (itemData.entityId.split("_").length > 1) {
@@ -226,7 +226,7 @@ function getChartData() {
 
                         ]
 
-                        renderCharts(value[item][current].entityId, value[item][current].index, buildedSets,"line");
+                        renderCharts(value[item][current].entityId, value[item][current].index, buildedSets, "line");
 
                     } else {
                         if ($("#" + value[item][current][0].entityId).length == 0) {
@@ -259,7 +259,7 @@ function getChartData() {
                         $("#" + value[item][current][0].entityId).parent().find("h6").append("<select class='chartSwitcher' id='switchter_" + value[item][current][0].entityId + "'>" + options + "</select>");
 
 
-                        let currentChart = renderCharts(value[item][current][0].entityId, value[item][current][0].index, buildedSets,"line");
+                        let currentChart = renderCharts(value[item][current][0].entityId, value[item][current][0].index, buildedSets, "line");
 
                         $("#switchter_" + value[item][current][0].entityId).change(function(e, index) {
                             let indexed = $(this).prop('selectedIndex');
@@ -313,9 +313,9 @@ function getSingleChartData(item, id) {
             var data;
             var entityList = value[item];
 
-            for(i=0;i<entityList.length;i++){
+            for (i = 0; i < entityList.length; i++) {
                 var entity = entityList[i];
-                if(entity.entityId == id){
+                if (entity.entityId == id) {
                     data = entity;
                     break;
                 }
